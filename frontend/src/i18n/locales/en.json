@@ -1,0 +1,59 @@
+{
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "dashboard": "Dashboard",
+    "reportIssue": "Report Issue",
+    "ownerPanel": "Owner Panel",
+    "moderation": "Moderation",
+    "login": "Login",
+    "joinNow": "Join Now",
+    "logout": "Logout",
+    "myProfile": "My Profile",
+    "myContributions": "My Contributions",
+    "signedInAs": "Signed in as"
+  },
+  "landing": {
+    "heroTitle": "Find Safe Student Accommodations",
+    "heroSubtitle": "Real safety reports from real students. Make informed decisions about where you live.",
+    "ctaExplore": "Explore Accommodations",
+    "ctaReport": "Report an Issue",
+    "trustedBy": "Trusted by thousands of students across India"
+  },
+  "dashboard": {
+    "title": "Student Dashboard",
+    "welcome": "Welcome back",
+    "yourReports": "Your Reports",
+    "nearbySafe": "Nearby Safe Places",
+    "safetyOverview": "Safety Overview"
+  },
+  "report": {
+    "title": "Report a Safety Issue",
+    "selectAccommodation": "Select Accommodation",
+    "issueType": "Issue Type",
+    "description": "Description",
+    "uploadImages": "Upload Images",
+    "submitReport": "Submit Report",
+    "categories": {
+      "security": "Security",
+      "infrastructure": "Infrastructure",
+      "food": "Food",
+      "water": "Water",
+      "cleanliness": "Cleanliness",
+      "other": "Other"
+    }
+  },
+  "common": {
+    "loading": "Loading",
+    "error": "Error",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "search": "Search",
+    "safe": "Safe",
+    "caution": "Caution",
+    "unsafe": "Unsafe",
+    "viewDetails": "View Details",
+    "back": "Back"
+  }
+}

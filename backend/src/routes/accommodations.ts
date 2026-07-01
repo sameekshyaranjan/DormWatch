@@ -1,0 +1,405 @@
+import { Router, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { User } from '../models/User.js';
+import { Accommodation } from '../models/Accommodation.js';
+import { Report } from '../models/Report.js';
+import { authMiddleware, AuthRequest } from '../middleware/authMiddleware.js';
+import { ownerMiddleware } from '../middleware/ownerMiddleware.js';
+import { calculateDSI, getTrustScoreLabel, getTrustScoreColor } from '../utils/trustScore.js';
+
+const router = Router();
+
+// ========================
+// GET /api/accommodations
+// ========================
+router.get('/', async (req, res: Response) => {
+  try {
+    const { area, type, minDSI, maxDSI, search, limit = 20, page = 1 } = req.query;
+
+    const query: any = { isActive: true };
+
+    if (area) query.area = area;
+    if (type) query.type = type;
+    if (minDSI || maxDSI) {
+      query.dsi = {};
+      if (minDSI) query.dsi.$gte = Number(minDSI);
+      if (maxDSI) query.dsi.$lte = Number(maxDSI);
+    }
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { area: { $regex: search, $options: 'i' } },
+        { address: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [accommodations, total] = await Promise.all([
+      Accommodation.find(query)
+        .select('_id name address city description amenities totalRooms occupiedRooms pricePerMonth contactPhone type latitude longitude trustScore trustScoreLabel trustScoreColor totalReports isVerified riskScore createdAt dsi')
+        .sort({ trustScore: 1, createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit)),
+      Accommodation.countDocuments(query),
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        accommodations,
+        pagination: {
+          total,
+          page: Number(page),
+          limit: Number(limit),
+          pages: Math.ceil(total / Number(limit)),
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Get accommodations error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error',
+      code: 'DATABASE_ERROR',
+    });
+  }
+});
+
+// ========================
+// GET /api/accommodations/dropdown
+// ========================
+router.get('/dropdown', authMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const accommodations = await Accommodation.find({ isActive: true })
+      .select('name area type dsi')
+      .sort({ name: 1 });
+
+    res.json({
+      success: true,
+      data: accommodations,
+    });
+  } catch (error) {
+    console.error('Get dropdown error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error',
+      code: 'DATABASE_ERROR',
+    });
+  }
+});
+
+// ========================
+// GET /api/accommodations/with-location
+// ========================
+router.get('/with-location', async (req, res: Response) => {
+  try {
+    const accommodations = await Accommodation.find({
+      isActive: true,
+      'location.coordinates': { $exists: true },
+    })
+      .select('name area type dsi location reportCount categoryScores trustScore trustScoreLabel totalReports latitude longitude')
+      .lean();
+
+    // Add risk level to each
+    const markers = accommodations.map(acc => ({
+      ...acc,
+      riskLevel: acc.dsi >= 80 ? 'low' : acc.dsi >= 50 ? 'medium' : 'high',
+    }));
+
+    res.json({
+      success: true,
+      data: markers,
+    });
+  } catch (error) {
+    console.error('Get map data error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error',
+      code: 'DATABASE_ERROR',
+    });
+  }
+});
+
+// ========================
+// GET /api/accommodations/:id
+// ========================
+router.get('/:id', async (req: Request, res: Response) => {
+  try {
+    const accommodation = await Accommodation.findById(req.params.id)
+      .populate('ownerId', 'name phone')
+      .populate('owner', 'name phone')
+      .select('-__v');
+
+    if (!accommodation) {
+      res.status(404).json({
+        success: false,
+        error: 'Accommodation not found',
+        code: 'NOT_FOUND',
+      });
+      return;
+    }
+
+    // Optionally identify the requester to check ownership
+    let requesterId: string | null = null;
+    try {
+      const authHeader = req.headers.authorization;
+      if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
+        requesterId = decoded.userId;
+      }
+    } catch {
+      // Not authenticated or invalid token — treat as public visitor
+    }
+
+    const isOwner = requesterId &&
+      accommodation.ownerId &&
+      String(accommodation.ownerId._id || accommodation.ownerId) === requesterId;
+
+    // Owners see ALL reports; public/students see only verified ones
+    const reportFilter: any = { accommodationId: accommodation._id };
+    if (!isOwner) {
+      reportFilter.status = { $in: ['ai_verified', 'approved', 'resolved', 'verified'] };
+    }
+
+    const reports = await Report.find(reportFilter)
+      .populate('userId', 'name college isVerified collegeName')
+      .sort({ createdAt: -1 })
+      .limit(20);
+
+    res.json({
+      success: true,
+      data: {
+        ...accommodation.toObject(),
+        reports,
+      },
+    });
+  } catch (error) {
+    console.error('Get accommodation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error',
+      code: 'DATABASE_ERROR',
+    });
+  }
+});
+
+// ========================
+// POST /api/accommodations
+// ========================
+router.post('/', authMiddleware, ownerMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const {
+      name, type, address, area, city = 'Hyderabad', state = 'Telangana',
+      pincode, location, amenities, capacity, monthlyRent,
+      contactPhone, contactEmail, images,
+    } = req.body;
+
+    if (!name || !type || !address || !area || !pincode || !location) {
+      res.status(400).json({
+        success: false,
+        error: 'Please provide all required fields',
+        code: 'VALIDATION_ERROR',
+      });
+      return;
+    }
+
+    const accommodation = new Accommodation({
+      name,
+      type,
+      address,
+      area,
+      city,
+      state,
+      pincode,
+      location: {
+        type: 'Point',
+        coordinates: location.coordinates || [78.4867, 17.3850], // Default Hyderabad
+      },
+      latitude: location.coordinates?.[1] || 17.3850,
+      longitude: location.coordinates?.[0] || 78.4867,
+      ownerId: req.user?._id,
+      owner: req.user?._id,
+      amenities: amenities || [],
+      capacity,
+      totalRooms: capacity,
+      monthlyRent,
+      pricePerMonth: monthlyRent,
+      contactPhone,
+      contactEmail,
+      images: images || [],
+    });
+
+    await accommodation.save();
+
+    res.status(201).json({
+      success: true,
+      data: accommodation,
+      message: 'Accommodation created successfully',
+    });
+  } catch (error) {
+    console.error('Create accommodation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error',
+      code: 'DATABASE_ERROR',
+    });
+  }
+});
+
+// ========================
+// PUT /api/accommodations/:id
+// ========================
+router.put('/:id', authMiddleware, ownerMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const accommodation = await Accommodation.findById(req.params.id);
+
+    if (!accommodation) {
+      res.status(404).json({
+        success: false,
+        error: 'Accommodation not found',
+        code: 'NOT_FOUND',
+      });
+      return;
+    }
+
+    // Check ownership
+    if (accommodation.ownerId.toString() !== req.user?._id.toString() && req.user?.role !== 'admin') {
+      res.status(403).json({
+        success: false,
+        error: 'Not authorized to update this accommodation',
+        code: 'FORBIDDEN',
+      });
+      return;
+    }
+
+    const updated = await Accommodation.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
+
+    res.json({
+      success: true,
+      data: updated,
+      message: 'Accommodation updated successfully',
+    });
+  } catch (error) {
+    console.error('Update accommodation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error',
+      code: 'DATABASE_ERROR',
+    });
+  }
+});
+
+// ========================
+// DELETE /api/accommodations/:id
+// ========================
+router.delete('/:id', authMiddleware, ownerMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const accommodation = await Accommodation.findById(req.params.id);
+
+    if (!accommodation) {
+      res.status(404).json({
+        success: false,
+        error: 'Accommodation not found',
+        code: 'NOT_FOUND',
+      });
+      return;
+    }
+
+    // Check ownership
+    if (accommodation.ownerId.toString() !== req.user?._id.toString() && req.user?.role !== 'admin') {
+      res.status(403).json({
+        success: false,
+        error: 'Not authorized to delete this accommodation',
+        code: 'FORBIDDEN',
+      });
+      return;
+    }
+
+    // Soft delete
+    accommodation.isActive = false;
+    await accommodation.save();
+
+    res.json({
+      success: true,
+      message: 'Accommodation deleted successfully',
+    });
+  } catch (error) {
+    console.error('Delete accommodation error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error',
+      code: 'DATABASE_ERROR',
+    });
+  }
+});
+
+// ========================
+// POST /api/accommodations/:id/recalculate-score
+// ========================
+router.post('/:id/recalculate-score', authMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const accommodation = await Accommodation.findById(req.params.id);
+
+    if (!accommodation) {
+      res.status(404).json({
+        success: false,
+        error: 'Accommodation not found',
+        code: 'NOT_FOUND',
+      });
+      return;
+    }
+
+    // Get all reports for this accommodation
+    const reports = await Report.find({ accommodationId: accommodation._id });
+
+    // Calculate new DSI
+    const { dsi, categoryScores } = calculateDSI(reports, accommodation.dsi);
+
+    // Update accommodation
+    accommodation.dsi = dsi;
+    accommodation.categoryScores = categoryScores as any;
+    accommodation.reportCount = reports.length;
+    accommodation.totalReports = reports.length;
+    accommodation.verifiedReportCount = reports.filter((r: any) =>
+      ['ai_verified', 'approved', 'resolved', 'verified'].includes(r.status)
+    ).length;
+    accommodation.trustScore = dsi;
+    accommodation.trustScoreLabel = getTrustScoreLabel(dsi);
+    accommodation.trustScoreColor = getTrustScoreColor(dsi);
+    accommodation.riskScore = 100 - dsi;
+
+    // Add to DSI history
+    accommodation.ssiHistory.push({
+      score: dsi,
+      date: new Date(),
+      reportCount: reports.length,
+    });
+
+    await accommodation.save();
+
+    res.json({
+      success: true,
+      data: {
+        dsi,
+        categoryScores,
+        reportCount: accommodation.reportCount,
+      },
+      message: 'DSI recalculated successfully',
+    });
+  } catch (error) {
+    console.error('Recalculate DSI error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error',
+      code: 'DATABASE_ERROR',
+    });
+  }
+});
+
+export default router;

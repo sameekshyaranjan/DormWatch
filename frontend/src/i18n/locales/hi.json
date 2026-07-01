@@ -1,0 +1,59 @@
+{
+  "nav": {
+    "home": "होम",
+    "explore": "खोजें",
+    "dashboard": "डैशबोर्ड",
+    "reportIssue": "समस्या रिपोर्ट करें",
+    "ownerPanel": "मालिक पैनल",
+    "moderation": "मॉडरेशन",
+    "login": "लॉगिन",
+    "joinNow": "अभी जुड़ें",
+    "logout": "लॉगआउट",
+    "myProfile": "मेरी प्रोफ़ाइल",
+    "myContributions": "मेरे योगदान",
+    "signedInAs": "इस रूप में साइन इन"
+  },
+  "landing": {
+    "heroTitle": "सुरक्षित छात्र आवास खोजें",
+    "heroSubtitle": "असली छात्रों की असली सुरक्षा रिपोर्ट। जहाँ आप रहते हैं उसके बारे में सूचित निर्णय लें।",
+    "ctaExplore": "आवास खोजें",
+    "ctaReport": "समस्या रिपोर्ट करें",
+    "trustedBy": "भारत भर के हजारों छात्रों द्वारा विश्वसनीय"
+  },
+  "dashboard": {
+    "title": "छात्र डैशबोर्ड",
+    "welcome": "वापस स्वागत है",
+    "yourReports": "आपकी रिपोर्ट",
+    "nearbySafe": "निकटतम सुरक्षित स्थान",
+    "safetyOverview": "सुरक्षा अवलोकन"
+  },
+  "report": {
+    "title": "सुरक्षा समस्या रिपोर्ट करें",
+    "selectAccommodation": "आवास चुनें",
+    "issueType": "समस्या का प्रकार",
+    "description": "विवरण",
+    "uploadImages": "चित्र अपलोड करें",
+    "submitReport": "रिपोर्ट सबमिट करें",
+    "categories": {
+      "security": "सुरक्षा",
+      "infrastructure": "बुनियादी ढांचा",
+      "food": "भोजन",
+      "water": "पानी",
+      "cleanliness": "सफाई",
+      "other": "अन्य"
+    }
+  },
+  "common": {
+    "loading": "लोड हो रहा है",
+    "error": "त्रुटि",
+    "submit": "सबमिट",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "search": "खोजें",
+    "safe": "सुरक्षित",
+    "caution": "सावधान",
+    "unsafe": "असुरक्षित",
+    "viewDetails": "विवरण देखें",
+    "back": "वापस"
+  }
+}

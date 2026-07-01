@@ -1,0 +1,136 @@
+import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+import { configureCloudinary } from './config/cloudinary.js';
+import { apiLimiter } from './middleware/rateLimiter.js';
+
+// Route imports
+import authRoutes from './routes/auth.js';
+import otpRoutes from './routes/otp.js';
+import accommodationRoutes from './routes/accommodations.js';
+import reportRoutes from './routes/reports.js';
+import uploadRoutes from './routes/upload.js';
+import ownerRoutes from './routes/owner.js';
+import adminRoutes from './routes/admin.js';
+import analyticsRoutes from './routes/analytics.js';
+import aiRoutes from './routes/aiRoutes.js';
+import profileRoutes from './routes/profile.js';
+
+// Load environment variables
+dotenv.config();
+
+// Initialize Express app
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// ========================
+// Middleware
+// ========================
+app.use(helmet());
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    // Allow any localhost origin in development (http or https, any port)
+    if (/^https?:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)) return callback(null, true);
+    // Allow the configured frontend URL
+    const frontendUrl = process.env.FRONTEND_URL;
+    if (frontendUrl && origin === frontendUrl) return callback(null, true);
+    // In development, allow all origins
+    if (process.env.NODE_ENV !== 'production') return callback(null, true);
+    callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+}));
+app.use(morgan('dev'));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Rate limiting
+app.use('/api', apiLimiter);
+
+// ========================
+// Routes
+// ========================
+app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/otp', otpRoutes);
+app.use('/api/accommodations', accommodationRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/owner', ownerRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/ai', aiRoutes);
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({
+    success: true,
+    message: 'DormWatch API is running',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// ========================
+// Error handling middleware
+// ========================
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error('Error:', err);
+
+  if (err.name === 'MulterError') {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      res.status(400).json({
+        success: false,
+        error: 'File size too large. Maximum 5MB allowed.',
+        code: 'UPLOAD_ERROR',
+      });
+      return;
+    }
+  }
+
+  res.status(err.status || 500).json({
+    success: false,
+    error: err.message || 'Internal server error',
+    code: err.code || 'DATABASE_ERROR',
+  });
+});
+
+// ========================
+// Start server
+// ========================
+const startServer = async () => {
+  try {
+    // Configure Cloudinary early so routes can use it
+    configureCloudinary();
+
+    // Connect to MongoDB (skip in DEMO_MODE if unavailable)
+    if (process.env.DEMO_MODE !== 'true') {
+      await connectDB();
+    } else {
+      console.log('⚠️  DEMO MODE: Skipping MongoDB connection');
+    }
+
+    // Start listening
+    app.listen(PORT, () => {
+      console.log(`
+🚀 DormWatch API Server
+━━━━━━━━━━━━━━━━━━━━━━
+📍 Port: ${PORT}
+🌐 Environment: ${process.env.NODE_ENV || 'development'}
+🔗 API: http://localhost:${PORT}/api
+━━━━━━━━━━━━━━━━━━━━━━
+      `);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
+
+export default app;

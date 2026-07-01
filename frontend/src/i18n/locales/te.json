@@ -1,0 +1,59 @@
+{
+  "nav": {
+    "home": "హోమ్",
+    "explore": "అన్వేషించు",
+    "dashboard": "డాష్‌బోర్డ్",
+    "reportIssue": "సమస్య నివేదించు",
+    "ownerPanel": "యజమాని ప్యానెల్",
+    "moderation": "మోడరేషన్",
+    "login": "లాగిన్",
+    "joinNow": "ఇప్పుడే చేరు",
+    "logout": "లాగౌట్",
+    "myProfile": "నా ప్రొఫైల్",
+    "myContributions": "నా సహకారాలు",
+    "signedInAs": "ఈ విధంగా సైన్ ఇన్"
+  },
+  "landing": {
+    "heroTitle": "సురక్షిత విద్యార్థి వసతి కనుగొనండి",
+    "heroSubtitle": "నిజమైన విద్యార్థుల నిజమైన భద్రతా నివేదికలు. మీరు ఎక్కడ నివసిస్తున్నారో తెలివైన నిర్ణయాలు తీసుకోండి.",
+    "ctaExplore": "వసతి అన్వేషించు",
+    "ctaReport": "సమస్య నివేదించు",
+    "trustedBy": "భారతదేశం అంతటా వేలమంది విద్యార్థులచే నమ్మకం"
+  },
+  "dashboard": {
+    "title": "విద్యార్థి డాష్‌బోర్డ్",
+    "welcome": "తిరిగి స్వాగతం",
+    "yourReports": "మీ నివేదికలు",
+    "nearbySafe": "సమీపంలోని సురక్షిత ప్రదేశాలు",
+    "safetyOverview": "భద్రతా సమీక్ష"
+  },
+  "report": {
+    "title": "భద్రతా సమస్య నివేదించు",
+    "selectAccommodation": "వసతి ఎంచుకోండి",
+    "issueType": "సమస్య రకం",
+    "description": "వివరణ",
+    "uploadImages": "చిత్రాలు అప్‌లోడ్ చేయండి",
+    "submitReport": "నివేదిక సమర్పించు",
+    "categories": {
+      "security": "భద్రత",
+      "infrastructure": "మౌలిక సదుపాయాలు",
+      "food": "ఆహారం",
+      "water": "నీరు",
+      "cleanliness": "శుభ్రత",
+      "other": "ఇతర"
+    }
+  },
+  "common": {
+    "loading": "లోడ్ అవుతోంది",
+    "error": "దోషం",
+    "submit": "సమర్పించు",
+    "cancel": "రద్దు",
+    "save": "సేవ్",
+    "search": "శోధించు",
+    "safe": "సురక్షితం",
+    "caution": "జాగ్రత్త",
+    "unsafe": "అసురక్షితం",
+    "viewDetails": "వివరాలు చూడు",
+    "back": "వెనుకకు"
+  }
+}
