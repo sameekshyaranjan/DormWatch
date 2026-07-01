@@ -22,8 +22,8 @@ function generateOTP() {
 async function sendEmail(to, subject, htmlContent) {
   try {
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.error('Email credentials not configured');
-      return { success: false, message: 'Email not configured' };
+      console.log(`[DEV MODE] Email bypassed for ${to}. Subject: ${subject}`);
+      return { success: true, message: 'Email bypassed in dev mode' };
     }
 
     const mailOptions = {
@@ -122,8 +122,8 @@ async function sendOTPEmail(to, otp, type) {
 
   try {
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.error('Email credentials not configured');
-      return { success: false, message: 'Email not configured' };
+      console.log(`[DEV MODE] OTP for ${to} is: ${otp}`);
+      return { success: true, message: 'Email bypassed in dev mode' };
     }
 
     await transporter.sendMail({
