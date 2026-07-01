@@ -80,9 +80,9 @@ export function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a href="mailto:support@dormwatch.in" className="text-sm text-body hover:text-ink dark:text-[#888888] dark:hover:text-white transition-colors flex items-center gap-2">
+                <a href="mailto:dummy@example.com" className="text-sm text-body hover:text-ink dark:text-[#888888] dark:hover:text-white transition-colors flex items-center gap-2">
                   <Mail className="h-3.5 w-3.5" />
-                  support@dormwatch.in
+                  dummy@example.com
                 </a>
               </li>
               <li className="flex gap-3 pt-1">
