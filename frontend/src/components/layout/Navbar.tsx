@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-  Shield,
+  Eye,
   LayoutDashboard,
   Map,
   FileText,
@@ -73,7 +73,7 @@ export function Navbar() {
     <header className="fixed top-0 left-0 right-0 z-40 h-16 bg-canvas/80 backdrop-blur-xl border-b border-hairline dark:bg-[#0a0a0a]/80 dark:border-[#333333]">
       <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between px-6">
         <Link to="/" className="flex items-center gap-2.5">
-          <Shield className="h-6 w-6 text-ink dark:text-white" strokeWidth={2} />
+          <Eye className="h-6 w-6 text-ink dark:text-white" strokeWidth={2} />
           <span className="text-lg font-semibold tracking-tight text-ink dark:text-white">DormWatch</span>
         </Link>
         {isAuthenticated && (

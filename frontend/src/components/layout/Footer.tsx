@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Shield, Github, Twitter, Mail } from 'lucide-react'
+import { Eye, Github, Twitter, Mail } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export function Footer() {
@@ -12,7 +12,7 @@ export function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center gap-2.5 mb-4">
-              <Shield className="h-5 w-5 text-ink dark:text-white" strokeWidth={2} />
+              <Eye className="h-5 w-5 text-ink dark:text-white" strokeWidth={2} />
               <span className="text-base font-semibold text-ink dark:text-white">DormWatch</span>
             </Link>
             <p className="text-sm text-body dark:text-[#888888] max-w-xs leading-relaxed">

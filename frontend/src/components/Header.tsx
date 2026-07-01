@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { 
   FiLogOut, FiUser, FiAlertTriangle, 
-  FiShield, FiChevronDown, FiMenu, FiX, FiActivity
+  FiEye, FiChevronDown, FiMenu, FiX, FiActivity
 } from 'react-icons/fi';
 
 export const Header: React.FC = () => {
@@ -56,10 +56,10 @@ export const Header: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2 group">
               <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-2 rounded-xl shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform duration-300">
-                <FiShield className="h-6 w-6 text-white" />
+                <FiEye className="h-6 w-6 text-white" />
               </div>
               <span className="text-xl font-black tracking-tighter text-slate-900 uppercase group-hover:scale-105 transition-transform duration-200">
-                Safe<span className="text-blue-600">Stay</span>
+                Dorm<span className="text-blue-600">Watch</span>
               </span>
             </Link>
           </div>

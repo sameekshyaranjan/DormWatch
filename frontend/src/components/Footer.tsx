@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiShield, FiTwitter, FiInstagram, FiGithub, FiMail } from 'react-icons/fi';
+import { FiShield, FiEye, FiTwitter, FiInstagram, FiGithub, FiMail } from 'react-icons/fi';
 
 export const Footer: React.FC = () => {
   return (
@@ -12,10 +12,10 @@ export const Footer: React.FC = () => {
           <div className="col-span-1 md:col-span-1">
             <Link to="/" className="flex items-center space-x-2 group mb-6">
               <div className="bg-blue-600 p-2 rounded-xl">
-                <FiShield className="h-5 w-5 text-white" />
+                <FiEye className="h-5 w-5 text-white" />
               </div>
               <span className="text-xl font-black tracking-tighter text-white uppercase">
-                Safe<span className="text-blue-500">Stay</span>
+                Dorm<span className="text-blue-500">Watch</span>
               </span>
             </Link>
             <p className="text-sm leading-relaxed text-slate-400">
