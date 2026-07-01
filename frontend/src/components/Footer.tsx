@@ -69,7 +69,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-500">
-          <p>&copy; 2024 DormWatch Platform. All rights reserved.</p>
+          <p>&copy; 2026 DormWatch Platform. All rights reserved.</p>
           <div className="flex gap-8">
             <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div> System Operational</span>
             <span>v2.4.0-pro</span>
