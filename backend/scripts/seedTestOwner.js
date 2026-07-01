@@ -18,14 +18,14 @@ const OWNER = {
   ownerVerificationStatus: 'verified',
   propertyName: 'Kumar Residences',
   propertyCount: '2',
-  businessAddress: '123 MG Road, Hyderabad, Telangana 500001',
+  businessAddress: '123 MG Road, Bengaluru, Telangana 500001',
 };
 
 const ACCOMMODATIONS = [
   {
     name: 'Kumar PG for Boys',
     address: '123 MG Road, Near Metro Station',
-    city: 'Hyderabad',
+    city: 'Bengaluru',
     description:
       'A well-maintained paying guest accommodation for boys with modern amenities, 24/7 security, and homely food. Located close to IT hubs and public transport.',
     amenities: ['WiFi', 'Food', 'Laundry', 'AC', 'Power Backup', 'Security', 'Parking'],
@@ -44,7 +44,7 @@ const ACCOMMODATIONS = [
   {
     name: 'Kumar Ladies Hostel',
     address: '456 Banjara Hills Road No. 3',
-    city: 'Hyderabad',
+    city: 'Bengaluru',
     description:
       'Premium hostel for working women and students with round-the-clock security, CCTV surveillance, and nutritious meals. Safe neighborhood with easy access to shopping and transit.',
     amenities: ['WiFi', 'Food', 'Laundry', 'AC', 'Power Backup', 'CCTV', 'Gym'],

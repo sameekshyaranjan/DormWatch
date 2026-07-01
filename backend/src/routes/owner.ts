@@ -85,7 +85,7 @@ router.get('/accommodations', async (req: AuthRequest, res: Response) => {
 router.post('/accommodations', async (req: AuthRequest, res: Response) => {
   try {
     const {
-      name, type, address, area, city = 'Hyderabad', state = 'Telangana',
+      name, type, address, area, city = 'Bengaluru', state = 'Telangana',
       pincode, location, amenities, capacity, monthlyRent,
       contactPhone, contactEmail, images,
     } = req.body;

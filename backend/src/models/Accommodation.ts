@@ -91,7 +91,7 @@ const accommodationSchema = new Schema<IAccommodation>({
   city: {
     type: String,
     required: true,
-    default: 'Hyderabad',
+    default: 'Bengaluru',
   },
   state: {
     type: String,

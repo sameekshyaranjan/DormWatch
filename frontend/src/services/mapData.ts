@@ -25,7 +25,7 @@ function generateHistory(startScore: number, trend: 'up' | 'down' | 'stable' | '
   });
 }
 
-// ── Seeded Hyderabad Accommodations (16) ─────────────────────
+// ── Seeded Bengaluru Accommodations (16) ─────────────────────
 export const SEED_MARKERS: MapMarkerWithHistory[] = [
   // ── SAFE (DSI ≥ 70) ──
   {
@@ -116,10 +116,10 @@ export const SEED_MARKERS: MapMarkerWithHistory[] = [
 
 // ── Seeded Colleges (6) ──────────────────────────────────────
 export const SEED_COLLEGES = [
-  { id: 'col-1', name: 'IIIT Hyderabad', latitude: 17.4435, longitude: 78.3476, area: 'Gachibowli' },
-  { id: 'col-2', name: 'JNTU Hyderabad', latitude: 17.4943, longitude: 78.3242, area: 'Kukatpally' },
+  { id: 'col-1', name: 'IIIT Bengaluru', latitude: 17.4435, longitude: 78.3476, area: 'Gachibowli' },
+  { id: 'col-2', name: 'JNTU Bengaluru', latitude: 17.4943, longitude: 78.3242, area: 'Kukatpally' },
   { id: 'col-3', name: 'Osmania University', latitude: 17.4156, longitude: 78.5318, area: 'Tarnaka' },
-  { id: 'col-4', name: 'IIT Hyderabad', latitude: 17.5879, longitude: 78.1231, area: 'Kandi' },
+  { id: 'col-4', name: 'IIT Bengaluru', latitude: 17.5879, longitude: 78.1231, area: 'Kandi' },
   { id: 'col-5', name: 'CBIT', latitude: 17.3975, longitude: 78.3290, area: 'Gandipet' },
   { id: 'col-6', name: 'Vasavi College', latitude: 17.3280, longitude: 78.4408, area: 'Vidyanagar' },
 ];

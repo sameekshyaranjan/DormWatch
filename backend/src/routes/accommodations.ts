@@ -191,7 +191,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.post('/', authMiddleware, ownerMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const {
-      name, type, address, area, city = 'Hyderabad', state = 'Telangana',
+      name, type, address, area, city = 'Bengaluru', state = 'Telangana',
       pincode, location, amenities, capacity, monthlyRent,
       contactPhone, contactEmail, images,
     } = req.body;
@@ -215,7 +215,7 @@ router.post('/', authMiddleware, ownerMiddleware, async (req: AuthRequest, res: 
       pincode,
       location: {
         type: 'Point',
-        coordinates: location.coordinates || [78.4867, 17.3850], // Default Hyderabad
+        coordinates: location.coordinates || [78.4867, 17.3850], // Default Bengaluru
       },
       latitude: location.coordinates?.[1] || 17.3850,
       longitude: location.coordinates?.[0] || 78.4867,

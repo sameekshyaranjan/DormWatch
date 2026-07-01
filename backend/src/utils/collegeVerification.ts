@@ -28,7 +28,7 @@ const COLLEGE_DOMAINS: string[] = [
   'iiitmunich.ac.in', 'iiitsonepat.ac.in', 'iiitkurnool.ac.in',
 
   // BITS
-  'bits-pilani.ac.in', 'bitsDubai.ac.in', 'bitsHyderabad.ac.in', 'bitsgoa.ac.in',
+  'bits-pilani.ac.in', 'bitsDubai.ac.in', 'bitsBengaluru.ac.in', 'bitsgoa.ac.in',
 
   // VIT
   'vit.ac.in', 'vitbhopal.ac.in', 'vitvellore.ac.in', 'vitchennai.ac.in',

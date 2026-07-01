@@ -109,7 +109,7 @@ export const Home: React.FC = () => {
     {
       quote: "Found water quality issues in 3 PGs near my college BEFORE signing any lease. This platform saved me from a nightmare.",
       author: "Priya S.",
-      role: "Engineering Student, Hyderabad",
+      role: "Engineering Student, Bengaluru",
       rating: 5
     },
     {

@@ -110,14 +110,14 @@ const getDistanceKm = (lat1: number, lon1: number, lat2: number, lon2: number): 
 };
 
 const COLLEGES: { name: string; lat: number; lng: number }[] = [
-  { name: 'IIT Hyderabad', lat: 17.5933, lng: 78.1256 },
-  { name: 'IIIT Hyderabad', lat: 17.4456, lng: 78.3496 },
+  { name: 'IIT Bengaluru', lat: 17.5933, lng: 78.1256 },
+  { name: 'IIIT Bengaluru', lat: 17.4456, lng: 78.3496 },
   { name: 'NIT Warangal', lat: 17.9840, lng: 79.5580 },
   { name: 'Osmania University', lat: 17.4126, lng: 78.5280 },
-  { name: 'JNTU Hyderabad', lat: 17.4932, lng: 78.3910 },
-  { name: 'BITS Pilani Hyderabad', lat: 17.5449, lng: 78.5716 },
-  { name: 'University of Hyderabad', lat: 17.4575, lng: 78.3287 },
-  { name: 'BITS Hyderabad', lat: 17.5449, lng: 78.5716 },
+  { name: 'JNTU Bengaluru', lat: 17.4932, lng: 78.3910 },
+  { name: 'BITS Pilani Bengaluru', lat: 17.5449, lng: 78.5716 },
+  { name: 'University of Bengaluru', lat: 17.4575, lng: 78.3287 },
+  { name: 'BITS Bengaluru', lat: 17.5449, lng: 78.5716 },
   { name: 'VIT Vellore', lat: 12.9716, lng: 79.1593 },
   { name: 'SRM Chennai', lat: 12.8231, lng: 80.0452 },
   { name: 'Manipal Academy', lat: 13.3525, lng: 74.7906 },
@@ -464,7 +464,7 @@ const AccommodationMap: React.FC<AccommodationMapProps> = ({ accommodations: pro
               <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search location (e.g., Nampally, Hyderabad, Ameerpet...)"
+                placeholder="Search location (e.g., Nampally, Bengaluru, Ameerpet...)"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onFocus={() => searchResults.length > 0 && setShowResults(true)}

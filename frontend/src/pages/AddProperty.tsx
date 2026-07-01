@@ -114,7 +114,7 @@ function SearchControl({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && searchLocation()}
-            placeholder="Search location (e.g., Hitech City, Hyderabad)"
+            placeholder="Search location (e.g., Hitech City, Bengaluru)"
             className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-xl focus:border-emerald-500 outline-none transition-all font-semibold text-sm"
           />
           {query && (
@@ -702,7 +702,7 @@ export default function AddProperty() {
                     value={formData.city}
                     onChange={handleChange}
                     className="w-full px-4 py-3 bg-slate-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-emerald-500 outline-none transition-all font-semibold"
-                    placeholder="e.g., Hyderabad"
+                    placeholder="e.g., Bengaluru"
                   />
                 </div>
                 <div>

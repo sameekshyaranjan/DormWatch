@@ -8,10 +8,10 @@ import type {
 
 // ── College Locations ───────────────────────────────────────
 export const COLLEGES: RouteLocation[] = [
-  { id: 'col-1', name: 'IIIT Hyderabad', latitude: 17.4435, longitude: 78.3476, area: 'Gachibowli' },
-  { id: 'col-2', name: 'JNTU Hyderabad', latitude: 17.4943, longitude: 78.3926, area: 'Kukatpally' },
+  { id: 'col-1', name: 'IIIT Bengaluru', latitude: 17.4435, longitude: 78.3476, area: 'Gachibowli' },
+  { id: 'col-2', name: 'JNTU Bengaluru', latitude: 17.4943, longitude: 78.3926, area: 'Kukatpally' },
   { id: 'col-3', name: 'Osmania University', latitude: 17.4156, longitude: 78.5302, area: 'Amberpet' },
-  { id: 'col-4', name: 'IIT Hyderabad', latitude: 17.5868, longitude: 78.1238, area: 'Kandi' },
+  { id: 'col-4', name: 'IIT Bengaluru', latitude: 17.5868, longitude: 78.1238, area: 'Kandi' },
   { id: 'col-5', name: 'CBIT', latitude: 17.4155, longitude: 78.3249, area: 'Gandipet' },
   { id: 'col-6', name: 'Vasavi College', latitude: 17.3890, longitude: 78.4790, area: 'LB Nagar' },
 ];
@@ -189,7 +189,7 @@ export function getRouteComparison(
 export function getRouteMetrics() {
   return {
     avgRouteDSI: 76,
-    safestRoute: 'Sunshine Ladies PG → IIIT Hyderabad (88)',
+    safestRoute: 'Sunshine Ladies PG → IIIT Bengaluru (88)',
     highestRiskZone: 'Dilshuknagar corridor',
     recentAlerts: 4,
   };
