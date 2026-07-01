@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { FiMail, FiLock, FiShield, FiArrowRight, FiCheckCircle } from 'react-icons/fi';
+import { FiMail, FiLock, FiShield, FiEye, FiArrowRight, FiCheckCircle } from 'react-icons/fi';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -60,8 +60,8 @@ export const Login: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-indigo-700 opacity-90"></div>
           <div className="relative z-10">
             <Link to="/" className="flex items-center space-x-2 text-2xl font-bold mb-12">
-              <FiShield className="h-8 w-8 text-yellow-400" />
-              <span>SafetyFirst</span>
+              <FiEye className="h-8 w-8 text-yellow-400" />
+              <span>DormWatch</span>
             </Link>
             
             <h2 className="text-4xl font-extrabold mb-6 leading-tight">
