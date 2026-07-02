@@ -178,107 +178,112 @@ export const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-white overflow-hidden">
       
-      {/* ================= HERO SECTION with PARALLAX ================= */}
-      <ParallaxContainer speed={0.3} className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style={{ animationDelay: '2s' }}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" style={{ animationDelay: '4s' }}></div>
-        </div>
-
-        {/* Grid Pattern Overlay */}
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBtLTEgMGExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L2c+PC9zdmc+')] opacity-40"></div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-          <div className="text-center">
-            
-            {/* Trust Badge */}
-            <FadeIn delay={0}>
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 text-sm mb-8">
-                <FiShield className="h-4 w-4 mr-2 text-green-400" />
-                <span>Trusted by 10,000+ Students Across India</span>
-              </div>
-            </FadeIn>
-
-            {/* Main Headline */}
-            <ScrollReveal delay={100} distance={40}>
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
-                Real Reviews
-                <span className="block bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 text-transparent bg-clip-text">
-                  Verified Safety
-                </span>
-                <span className="block text-blue-300 text-3xl sm:text-4xl lg:text-5xl mt-2 font-bold">
-                  No Surprises
-                </span>
-              </h1>
-            </ScrollReveal>
-
-            {/* Subheadline */}
-            <ScrollReveal delay={200} distance={30}>
-              <p className="text-lg sm:text-xl lg:text-2xl text-blue-100/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-                DormWatch shows <span className="text-white font-semibold">real, verified safety reports</span> from students who've actually lived there — not brochure photos or bought reviews.
-              </p>
-            </ScrollReveal>
-            
-            {/* CTA Buttons */}
-            <ScrollReveal delay={300} distance={20}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-                {user ? (
-                  <Link
-                    to={user.role === 'owner' ? '/owner/dashboard' : user.role === 'admin' ? '/admin' : '/dashboard'}
-                    className="group inline-flex items-center px-8 py-4 text-lg font-bold rounded-xl text-slate-900 bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-300 hover:to-orange-300 transform hover:scale-105 active:scale-95 transition-all duration-200 shadow-2xl shadow-orange-500/25"
-                  >
-                    Go to Dashboard
-                    <FiArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                ) : (
-                  <>
-                    <Link
-                      to="/accommodations"
-                      className="group inline-flex items-center px-8 py-4 text-lg font-bold rounded-xl text-slate-900 bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-300 hover:to-orange-300 transform hover:scale-105 active:scale-95 transition-all duration-200 shadow-2xl shadow-orange-500/25"
-                    >
-                      <FiMap className="mr-2 h-5 w-5" />
-                      Search Safe Accommodations
-                      <FiArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                    <Link
-                      to="/register"
-                      className="group inline-flex items-center px-8 py-4 text-lg font-semibold rounded-xl text-white border-2 border-white/30 hover:bg-white/10 active:scale-95 backdrop-blur-sm transition-all duration-200"
-                    >
-                      Report a Safety Issue
-                      <FiAlertTriangle className="ml-2 h-5 w-5" />
-                    </Link>
-                  </>
-                )}
-              </div>
-            </ScrollReveal>
-
-            {/* Trust Indicators */}
-            <StaggerReveal stagger={150} className="flex flex-wrap justify-center items-center gap-8 text-white/60 text-sm">
-              <div className="flex items-center">
-                <FiCheckCircle className="h-5 w-5 text-green-400 mr-2" />
-                <span>100% Verified Reports</span>
-              </div>
-              <div className="flex items-center">
-                <FiShield className="h-5 w-5 text-blue-400 mr-2" />
-                <span>Anonymous & Secure</span>
-              </div>
-              <div className="flex items-center">
-                <FiMapPin className="h-5 w-5 text-red-400 mr-2" />
-                <span>50+ Cities Covered</span>
-              </div>
-            </StaggerReveal>
+      {/* ================= HERO SECTION ================= */}
+      <div className="relative min-h-[100vh] flex flex-col justify-end lg:justify-center items-center bg-[#000000] overflow-hidden pt-32 pb-0">
+        {/* Absolute Background Effects */}
+        <div className="absolute inset-0 w-full h-full">
+          {/* Subtle Grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+          
+          {/* Massive Glowing Orbs */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] opacity-40 pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur-[120px] mix-blend-screen animate-pulse duration-[8000ms]"></div>
           </div>
+          <div className="absolute -top-40 right-0 w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+          <div className="absolute top-40 -left-20 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
         </div>
 
-        {/* Wave Divider */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
-          </svg>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center w-full mt-10">
+          
+          {/* Premium Pill Badge */}
+          <FadeIn delay={0}>
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-md mb-10 hover:bg-white/[0.06] transition-colors cursor-default">
+              <span className="flex h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.9)] animate-pulse"></span>
+              <span className="text-sm font-semibold text-white/90 tracking-wide uppercase">Trusted by 10,000+ Students</span>
+            </div>
+          </FadeIn>
+
+          {/* Headline */}
+          <ScrollReveal delay={100} distance={40}>
+            <h1 className="text-5xl sm:text-7xl lg:text-[6rem] font-bold text-white tracking-tighter leading-[1.05] mb-8 max-w-5xl mx-auto">
+              Real Reviews. <br className="hidden sm:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-b from-blue-400 to-purple-600">
+                Zero Surprises.
+              </span>
+            </h1>
+          </ScrollReveal>
+
+          {/* Subheadline */}
+          <ScrollReveal delay={200} distance={30}>
+            <p className="text-lg sm:text-xl lg:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
+              Don't leave your next home to chance. Get <span className="text-gray-200">verified safety reports</span> from students who have actually lived there. No fake photos. No bought ratings.
+            </p>
+          </ScrollReveal>
+          
+          {/* Buttons */}
+          <ScrollReveal delay={300} distance={20}>
+            <div className="flex flex-col sm:flex-row gap-5 justify-center items-center mb-16 w-full sm:w-auto">
+              {user ? (
+                <Link
+                  to={user.role === 'owner' ? '/owner/dashboard' : user.role === 'admin' ? '/admin' : '/dashboard'}
+                  className="w-full sm:w-auto group inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-2xl text-black bg-white hover:bg-gray-100 transition-all duration-300 shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(255,255,255,0.4)] hover:-translate-y-1"
+                >
+                  Go to Dashboard
+                  <FiArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/accommodations"
+                    className="w-full sm:w-auto group inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-2xl text-black bg-white hover:bg-gray-100 transition-all duration-300 shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.3)] hover:-translate-y-1"
+                  >
+                    <FiMap className="mr-3 w-5 h-5" />
+                    Search Accommodations
+                    <FiArrowRight className="ml-3 w-5 h-5 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="w-full sm:w-auto group inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-2xl text-white bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 backdrop-blur-md transition-all duration-300 hover:-translate-y-1"
+                  >
+                    Report an Issue
+                    <FiAlertTriangle className="ml-3 w-5 h-5 text-gray-400 group-hover:text-yellow-400 transition-colors" />
+                  </Link>
+                </>
+              )}
+            </div>
+          </ScrollReveal>
+
+          {/* Floating Abstract UI Graphic (Pops up from the bottom) */}
+          <ScrollReveal delay={400} distance={60} className="w-full max-w-5xl mx-auto -mb-1">
+            <div className="relative rounded-t-[2.5rem] border-t border-l border-r border-white/15 bg-gradient-to-b from-white/[0.08] to-transparent backdrop-blur-2xl pt-6 px-6 sm:pt-8 sm:px-10 shadow-2xl mt-4">
+              {/* Fake Mac Header */}
+              <div className="flex items-center gap-2 mb-8">
+                <div className="w-3.5 h-3.5 rounded-full bg-[#ff5f56] border border-[#e0443e]"></div>
+                <div className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] border border-[#dea123]"></div>
+                <div className="w-3.5 h-3.5 rounded-full bg-[#27c93f] border border-[#1aab29]"></div>
+              </div>
+              
+              {/* Abstract layout lines inside the "window" */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-56 md:h-72">
+                <div className="col-span-1 md:col-span-2 flex flex-col gap-6">
+                  <div className="w-full flex-1 bg-white/[0.04] rounded-2xl border border-white/5"></div>
+                  <div className="flex gap-6 h-1/3">
+                    <div className="w-1/2 h-full bg-blue-500/10 rounded-2xl border border-blue-500/20"></div>
+                    <div className="w-1/2 h-full bg-purple-500/10 rounded-2xl border border-purple-500/20"></div>
+                  </div>
+                </div>
+                <div className="col-span-1 hidden md:flex flex-col gap-6">
+                  <div className="w-full h-2/3 bg-white/[0.04] rounded-2xl border border-white/5"></div>
+                  <div className="w-full h-1/3 bg-white/[0.04] rounded-2xl border border-white/5"></div>
+                </div>
+              </div>
+              
+              {/* Bottom fade out gradient to seamlessly transition to the white problem section */}
+              <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#000000] to-transparent pointer-events-none"></div>
+            </div>
+          </ScrollReveal>
         </div>
-      </ParallaxContainer>
+      </div>
 
       {/* ================= PROBLEM SECTION ================= */}
       <div className="py-16 lg:py-24 bg-white">
