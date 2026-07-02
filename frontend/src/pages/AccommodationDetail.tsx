@@ -15,6 +15,7 @@ import {
   ScaleIn 
 } from '../components/ParallaxEffect';
 import VoicePlayer from '../components/VoicePlayer';
+import { ImageGallery } from '../components/ImageGallery';
 
 export const AccommodationDetail: React.FC = () => {
   const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -253,8 +254,8 @@ export const AccommodationDetail: React.FC = () => {
       <div className="py-16 lg:py-24 relative overflow-hidden bg-slate-900">
         {accommodation.images && accommodation.images.length > 0 ? (
           <>
-            <img src={accommodation.images[0]} alt={accommodation.name} className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+            <img src={accommodation.images[0]} alt={accommodation.name} className="absolute inset-0 w-full h-full object-cover opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/70 to-transparent"></div>
           </>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900"></div>
@@ -331,6 +332,18 @@ export const AccommodationDetail: React.FC = () => {
           {/* Main Column */}
           <div className="lg:col-span-2 space-y-10">
             
+            {/* Property Photos */}
+            {accommodation.images && accommodation.images.length > 0 && (
+              <ScrollReveal delay={50} distance={20}>
+                <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-xl shadow-slate-200/50">
+                  <h2 className="text-2xl font-black text-slate-900 mb-6 flex items-center gap-3">
+                    <FiMap className="text-blue-600" /> Property Photos
+                  </h2>
+                  <ImageGallery images={accommodation.images.map((url: string) => ({ url }))} />
+                </div>
+              </ScrollReveal>
+            )}
+
             {/* Property Info Cards */}
             {isOwner ? (
               /* ========== OWNER VIEW ========== */
