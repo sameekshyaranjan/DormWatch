@@ -210,9 +210,7 @@ export const Home: React.FC = () => {
             {/* Subheadline */}
             <ScrollReveal delay={200} distance={30}>
               <p className="text-lg sm:text-xl lg:text-2xl text-blue-100/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-                Don't gamble with your living situation. See <span className="text-white font-semibold">verified safety reports</span>, 
-                <span className="text-green-400 font-semibold"> real trust scores</span>, and 
-                <span className="text-yellow-400 font-semibold"> evidence-backed reviews</span> before you sign that lease.
+                DormWatch shows <span className="text-white font-semibold">real, verified safety reports</span> from students who've actually lived there — not brochure photos or bought reviews.
               </p>
             </ScrollReveal>
             
