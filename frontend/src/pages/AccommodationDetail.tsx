@@ -250,7 +250,15 @@ export const AccommodationDetail: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       {/* Header */}
-      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-16 lg:py-24 relative overflow-hidden">
+      <div className="py-16 lg:py-24 relative overflow-hidden bg-slate-900">
+        {accommodation.images && accommodation.images.length > 0 ? (
+          <>
+            <img src={accommodation.images[0]} alt={accommodation.name} className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900"></div>
+        )}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <FadeIn delay={0}>
             <Link to={isOwner ? "/owner/dashboard" : "/accommodations"} className="inline-flex items-center text-blue-300 hover:text-white mb-10 font-bold transition-all gap-2">
