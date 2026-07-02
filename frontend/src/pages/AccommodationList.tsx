@@ -245,9 +245,17 @@ export const AccommodationList: React.FC = () => {
               >
                 {/* Image / Thumbnail */}
                 <div className={`${viewMode === 'list' ? 'w-40 h-40 rounded-2xl' : 'w-full h-56'} bg-slate-50 relative overflow-hidden flex-shrink-0`}>
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-                    <FiHome className="h-12 w-12 text-slate-200 group-hover:scale-110 transition-transform duration-500" />
-                  </div>
+                  {accommodation.images && accommodation.images.length > 0 ? (
+                    <img 
+                      src={accommodation.images[0]} 
+                      alt={accommodation.name}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+                      <FiHome className="h-12 w-12 text-slate-200 group-hover:scale-110 transition-transform duration-500" />
+                    </div>
+                  )}
                   <div className="absolute top-4 left-4">
                     {getScoreBadge(accommodation.trustScore ?? 0)}
                   </div>
