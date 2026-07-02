@@ -287,7 +287,7 @@ export const Home: React.FC = () => {
                 Stop <span className="text-red-600">Guessing</span> About Your Living Conditions
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Every year, thousands of students face these issues — and most discover them AFTER signing the lease.
+                Don't let a glossy brochure trap you. Get the real story from students who have actually lived there before you sign anything.
               </p>
             </ScrollReveal>
           </div>
