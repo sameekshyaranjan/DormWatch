@@ -294,10 +294,10 @@ export const Home: React.FC = () => {
 
           <StaggerReveal stagger={100} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: "🎭", title: "Fake Reviews", desc: "Manipulated by brokers and paid reviewers" },
-              { icon: "🦠", title: "Food Poisoning", desc: "Poor kitchen hygiene discovered too late" },
-              { icon: "💧", title: "Water Issues", desc: "Contaminated or irregular water supply" },
-              { icon: "🔓", title: "Security Gaps", desc: "Broken locks, no CCTV, unsafe premises" }
+              { icon: "🎭", title: "Fake Reviews", desc: "\"5-star\" ratings bought by landlords, not earned from students" },
+              { icon: "🦠", title: "Hygiene Nightmares", desc: "Kitchen and living conditions you wouldn't wish on your worst enemy" },
+              { icon: "💧", title: "Plumbing Issues", desc: "Irregular water supply and showers that never work when you need them" },
+              { icon: "🔓", title: "Safety Risks", desc: "Useless locks, no working cameras, and zero security presence" }
             ].map((problem, i) => (
               <div key={i} className="bg-red-50 border border-red-100 rounded-2xl p-6 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl transition-all duration-300 ease-out">
                 <div className="text-4xl mb-4">{problem.icon}</div>
