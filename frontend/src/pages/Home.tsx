@@ -446,29 +446,28 @@ export const Home: React.FC = () => {
             <div>
               <FadeIn delay={0}>
                 <span className="inline-block px-4 py-1 rounded-full bg-white/10 text-white/90 text-sm font-semibold mb-4">
-                  TRUST SCORE SYSTEM
+                  TRUST RATING SYSTEM
                 </span>
               </FadeIn>
               <ScrollReveal delay={100} direction="right">
                 <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
-                  Every Accommodation Gets a
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">
-                    Dynamic Safety Score
+                  Data-Driven Safety.
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
+                    Unbiased Property Scores.
                   </span>
                 </h2>
                 <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-                  Our algorithm calculates a 0-100 trust score based on verified reports, 
-                  issue severity, resolution speed, and student feedback. No manipulation. 
-                  Pure data.
+                  We aggregate historical safety reports, resolution metrics, and verified 
+                  resident feedback to generate a real-time, tamper-proof score from 0 to 100.
                 </p>
               </ScrollReveal>
               
               {/* Score Legend */}
               <StaggerReveal stagger={100} className="space-y-4">
                 {[
-                  { range: "80-100", label: "Safe", color: "bg-green-500", desc: "Minimal issues, quick resolutions" },
-                  { range: "50-79", label: "Caution", color: "bg-yellow-500", desc: "Some concerns, check reports" },
-                  { range: "0-49", label: "Unsafe", color: "bg-red-500", desc: "Multiple unresolved issues" }
+                  { range: "80-100", label: "Excellent", color: "bg-green-500", desc: "High safety standards maintained" },
+                  { range: "50-79", label: "Fair", color: "bg-yellow-500", desc: "Intermittent issues requiring attention" },
+                  { range: "0-49", label: "Critical", color: "bg-red-500", desc: "Persistent unresolved safety concerns" }
                 ].map((score, i) => (
                   <div key={i} className="flex items-center gap-4 bg-white/5 rounded-xl p-4">
                     <div className={`w-4 h-4 rounded-full ${score.color}`}></div>
