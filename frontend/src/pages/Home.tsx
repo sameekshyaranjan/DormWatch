@@ -440,124 +440,66 @@ export const Home: React.FC = () => {
       </div>
 
       {/* ================= TRUST SCORE EXPLAINER ================= */}
-      <div className="py-16 lg:py-24 bg-white relative overflow-hidden border-t border-gray-100">
-        {/* Soft Ambient Background Blur */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-blue-50 to-indigo-50 rounded-full opacity-70 blur-[100px] pointer-events-none"></div>
+      <div className="py-24 lg:py-32 bg-[#050A15] relative overflow-hidden">
+        {/* Background ambient lighting */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] max-w-5xl bg-gradient-to-b from-blue-900/20 via-blue-900/5 to-transparent opacity-60 blur-[100px] pointer-events-none"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <FadeIn delay={0}>
+              <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-blue-400 text-xs font-bold tracking-widest uppercase mb-6">
+                <FiActivity className="w-3.5 h-3.5" />
+                <span>The Trust Metric</span>
+              </div>
+            </FadeIn>
+            <ScrollReveal delay={100}>
+              <h2 className="text-4xl lg:text-5xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+                Data-Driven Safety. <br className="hidden sm:block" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Unbiased Property Scores.</span>
+              </h2>
+              <p className="text-lg text-gray-400 leading-relaxed font-medium">
+                We aggregate historical safety reports, resolution metrics, and verified resident feedback to generate a real-time, tamper-proof score from 0 to 100.
+              </p>
+            </ScrollReveal>
+          </div>
+
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
-            {/* Left Column: Text & Legend */}
-            <div>
-              <FadeIn delay={0}>
-                <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-bold tracking-wide uppercase mb-6 shadow-sm">
-                  <FiActivity className="w-3.5 h-3.5" />
-                  <span>Trust Rating System</span>
+            {/* Massive Score Display (Takes 5 columns) */}
+            <ScrollReveal delay={200} className="lg:col-span-5 relative group">
+              <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/20 to-blue-500/20 rounded-[3rem] blur-2xl group-hover:blur-3xl transition-all duration-700"></div>
+              <div className="relative bg-white/[0.02] border border-white/10 backdrop-blur-md rounded-[3rem] p-12 text-center shadow-2xl hover:bg-white/[0.04] transition-colors duration-500">
+                <h3 className="text-gray-400 text-xs font-bold tracking-widest uppercase mb-6">Sample Property Score</h3>
+                <div className="text-8xl lg:text-[9rem] font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tracking-tighter mb-6 leading-none drop-shadow-sm">
+                  88
                 </div>
-              </FadeIn>
-              
-              <ScrollReveal delay={100} direction="right">
-                <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4 leading-tight tracking-tight">
-                  Data-Driven Safety. <br/>
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-                    Unbiased Property Scores.
-                  </span>
-                </h2>
-                <p className="text-lg text-gray-600 mb-8 leading-relaxed font-medium max-w-lg">
-                  We aggregate historical safety reports, resolution metrics, and verified 
-                  resident feedback to generate a real-time, tamper-proof score from 0 to 100.
-                </p>
-              </ScrollReveal>
-              
-              {/* Score Legend - Sleek Rows */}
-              <StaggerReveal stagger={100} className="space-y-3">
+                <div className="inline-flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-5 py-2 rounded-full shadow-inner">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                  <span className="text-emerald-400 font-bold uppercase tracking-widest text-xs">Excellent</span>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            {/* Legend (Takes 7 columns) */}
+            <div className="lg:col-span-7 space-y-4">
+              <StaggerReveal stagger={100}>
                 {[
-                  { range: "80-100", label: "Excellent", color: "text-emerald-600", bgColor: "bg-emerald-50", borderColor: "border-emerald-200", desc: "High safety standards maintained" },
-                  { range: "50-79", label: "Fair", color: "text-amber-600", bgColor: "bg-amber-50", borderColor: "border-amber-200", desc: "Intermittent issues requiring attention" },
-                  { range: "0-49", label: "Critical", color: "text-red-600", bgColor: "bg-red-50", borderColor: "border-red-200", desc: "Persistent unresolved safety concerns" }
+                  { range: "80-100", label: "Excellent", colorClass: "text-emerald-400", desc: "High safety standards maintained. Minimal reports and rapid resolution times." },
+                  { range: "50-79", label: "Fair", colorClass: "text-amber-400", desc: "Intermittent issues requiring attention. Exercise standard caution and review recent reports." },
+                  { range: "0-49", label: "Critical", colorClass: "text-red-400", desc: "Persistent unresolved safety concerns. Highly recommended to avoid." }
                 ].map((score, i) => (
-                  <div key={i} className="group flex items-center gap-4 p-4 rounded-xl bg-white border border-gray-100 shadow-[0_2px_10px_-5px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-blue-100 transition-all duration-300">
-                    <div className={`flex flex-col items-center justify-center w-14 h-14 rounded-lg ${score.bgColor} border ${score.borderColor} ${score.color} font-black text-sm shrink-0 group-hover:scale-105 transition-transform duration-300`}>
+                  <div key={i} className="group flex flex-col sm:flex-row sm:items-center p-6 lg:p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300">
+                    <div className={`w-32 shrink-0 text-3xl lg:text-4xl font-black ${score.colorClass} group-hover:scale-105 transition-transform duration-300 mb-4 sm:mb-0`}>
                       {score.range}
                     </div>
-                    <div>
-                      <h4 className={`text-lg font-bold ${score.color}`}>{score.label}</h4>
-                      <p className="text-gray-500 text-sm font-medium">{score.desc}</p>
+                    <div className="sm:ml-6 sm:border-l sm:border-white/10 sm:pl-6">
+                      <h4 className="text-xl font-bold text-white mb-2">{score.label}</h4>
+                      <p className="text-gray-400 leading-relaxed text-sm lg:text-base">{score.desc}</p>
                     </div>
                   </div>
                 ))}
               </StaggerReveal>
             </div>
-            
-            {/* Right Column: Premium Dashboard Visual */}
-            <ScrollReveal delay={200} direction="left" className="relative hidden md:block">
-              {/* Decorative background glow behind the card */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-full blur-[80px] opacity-15 transform translate-x-8 translate-y-8"></div>
-              
-              {/* Main Card */}
-              <div className="relative mx-auto w-full max-w-sm bg-white rounded-[2.5rem] p-1.5 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100">
-                <div className="bg-gradient-to-b from-gray-50 to-white rounded-[2.25rem] p-6 lg:p-8 h-full border border-gray-50 relative overflow-hidden">
-                  
-                  {/* Card Header */}
-                  <div className="flex justify-between items-start mb-8 relative z-10">
-                    <div>
-                      <h4 className="text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-0.5">Property Score</h4>
-                      <h3 className="text-xl font-black text-gray-900 tracking-tight">Sunrise Hostel</h3>
-                    </div>
-                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-gray-100 shrink-0">
-                      <FiShield className="w-5 h-5 text-emerald-500" />
-                    </div>
-                  </div>
-                  
-                  {/* Circular Progress (Custom SVG) */}
-                  <div className="relative flex justify-center items-center mb-8">
-                    {/* SVG Circle */}
-                    <svg className="w-40 h-40 transform -rotate-90 drop-shadow-lg" viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="44" fill="none" stroke="#F3F4F6" strokeWidth="8" />
-                      {/* strokeDasharray="276" (circumference of r=44 is ~276), strokeDashoffset="33" implies ~88% fill */}
-                      <circle cx="50" cy="50" r="44" fill="none" stroke="url(#scoreGradient)" strokeWidth="8" strokeDasharray="276" strokeDashoffset="33" strokeLinecap="round" className="transition-all duration-1000 ease-out" />
-                      <defs>
-                        <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#34D399" />
-                          <stop offset="100%" stopColor="#059669" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                    
-                    {/* Score Text inside circle */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 to-emerald-600 tracking-tighter">88</span>
-                      <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-0.5 rounded-full mt-1 shadow-sm border border-emerald-200">Excellent</span>
-                    </div>
-                  </div>
-                  
-                  {/* Mini Stats */}
-                  <div className="grid grid-cols-2 gap-4 relative z-10">
-                    <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-[0_2px_10px_-5px_rgba(0,0,0,0.05)] flex flex-col items-center text-center">
-                      <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest mb-1">Reports</span>
-                      <span className="text-lg font-black text-gray-900">124</span>
-                    </div>
-                    <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-[0_2px_10px_-5px_rgba(0,0,0,0.05)] flex flex-col items-center text-center">
-                      <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest mb-1">Resolution</span>
-                      <span className="text-lg font-black text-gray-900">1.2<span className="text-xs text-gray-400 ml-0.5">d</span></span>
-                    </div>
-                  </div>
-                  
-                  {/* Floating verification badge */}
-                  <div className="absolute -right-6 top-[40%] bg-white px-4 py-3 rounded-2xl shadow-xl border border-gray-100 flex items-center space-x-3 animate-[bounce_4s_infinite]">
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shrink-0 shadow-inner">
-                      <FiCheckCircle className="w-4 h-4 text-white" />
-                    </div>
-                    <div>
-                      <div className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Status</div>
-                      <div className="text-sm font-black text-gray-900 leading-tight">Verified</div>
-                    </div>
-                  </div>
-                  
-                </div>
-              </div>
-            </ScrollReveal>
-            
           </div>
         </div>
       </div>
