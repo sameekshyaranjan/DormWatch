@@ -1,27 +1,7 @@
-const nodemailer = require('nodemailer');
-const dns = require('dns');
+const { Resend } = require('resend');
 
-// Force IPv4 because Render instances often fail to connect to Gmail's IPv6 addresses (ENETUNREACH)
-dns.setDefaultResultOrder('ipv4first');
-
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
-  connectionTimeout: 10000, // 10 seconds
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-});
-
+const resend = new Resend(process.env.RESEND_API_KEY);
 const emailTemplates = require('./emailTemplates');
-
-transporter.verify()
-  .then(() => console.log('Email service ready'))
-  .catch(err => console.error('Email service error:', err.message));
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -30,23 +10,27 @@ function generateOTP() {
 // Generic email sender
 async function sendEmail(to, subject, htmlContent) {
   try {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    if (!process.env.RESEND_API_KEY) {
       console.log(`[DEV MODE] Email bypassed for ${to}. Subject: ${subject}`);
       return { success: true, message: 'Email bypassed in dev mode' };
     }
 
-    const mailOptions = {
-      from: `"Student Safety Platform" <${process.env.EMAIL_USER}>`,
+    const { data, error } = await resend.emails.send({
+      from: 'DormWatch <onboarding@resend.dev>',
       to,
       subject,
       html: htmlContent
-    };
+    });
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent:', info.messageId);
-    return { success: true, messageId: info.messageId };
+    if (error) {
+      console.error('Email sending error:', error);
+      return { success: false, error: error.message };
+    }
+
+    console.log('Email sent:', data.id);
+    return { success: true, messageId: data.id };
   } catch (error) {
-    console.error('Email sending error:', error);
+    console.error('Email sending exception:', error);
     return { success: false, error: error.message };
   }
 }
@@ -132,21 +116,26 @@ async function sendOTPEmail(to, otp, type) {
   `;
 
   try {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.log(`[DEV MODE] OTP for ${to} is: ${otp}`);
+    if (!process.env.RESEND_API_KEY) {
+      console.log(\`[DEV MODE] OTP for \${to} is: \${otp}\`);
       return { success: true, message: 'Email bypassed in dev mode' };
     }
 
-    await transporter.sendMail({
-      from: `"DormWatch" <${process.env.EMAIL_USER}>`,
+    const { data, error } = await resend.emails.send({
+      from: 'DormWatch <onboarding@resend.dev>',
       to,
       subject,
       html
     });
 
-    return { success: true };
+    if (error) {
+      console.error('Email send error:', error);
+      return { success: false, message: error.message };
+    }
+
+    return { success: true, messageId: data.id };
   } catch (error) {
-    console.error('Email send error:', error.message);
+    console.error('Email send exception:', error.message);
     return { success: false, message: error.message };
   }
 }
