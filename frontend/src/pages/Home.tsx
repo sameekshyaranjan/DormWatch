@@ -400,9 +400,6 @@ export const Home: React.FC = () => {
 
       {/* ================= FEATURES SECTION ================= */}
       <div className="py-24 lg:py-32 bg-[#0A0F1C] relative overflow-hidden">
-        {/* Subtle glowing lines in background */}
-        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-500/20 to-transparent"></div>
-        <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-indigo-500/20 to-transparent"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
