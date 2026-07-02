@@ -189,20 +189,23 @@ export const Dashboard: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-12">
+    <div className="min-h-screen bg-slate-50 pb-16">
       {/* Header Section */}
-      <div className="bg-slate-900 text-white pt-12 pb-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900 via-slate-900 to-slate-900 text-white pt-16 pb-28 border-b border-white/10 relative overflow-hidden">
+        {/* Subtle grid in header */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <ScrollReveal delay={0} distance={30}>
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-2xl font-bold shadow-lg shadow-blue-900/20 hover:scale-105 transition-transform duration-300">
+              <div className="flex items-center gap-5">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-2xl font-bold shadow-[0_0_30px_rgba(99,102,241,0.4)] hover:scale-105 transition-transform duration-300 ring-2 ring-white/20">
                   {user?.name?.charAt(0) || 'U'}
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold">Welcome back, {user?.name}! 👋</h1>
-                  <p className="text-blue-200 mt-1 flex items-center gap-2">
-                    <FiCheckCircle className="text-green-400" />
+                  <h1 className="text-3xl font-extrabold tracking-tight text-white mb-1">Welcome back, {user?.name}! 👋</h1>
+                  <p className="text-blue-200 font-medium flex items-center gap-2">
+                    <FiCheckCircle className="text-emerald-400" />
                     {userImpactCount > 0 
                       ? `You've filed ${userImpactCount} safety report${userImpactCount > 1 ? 's' : ''}`
                       : 'Start contributing to student safety'
@@ -215,10 +218,10 @@ export const Dashboard: React.FC = () => {
             <FadeIn delay={100}>
               <Link
                 to="/report"
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-slate-900 font-bold rounded-xl hover:from-yellow-300 hover:to-orange-400 active:scale-95 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 shadow-lg shadow-orange-900/20"
+                className="flex items-center gap-2 px-7 py-3.5 bg-white text-blue-900 font-bold rounded-xl hover:bg-blue-50 active:scale-95 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
               >
                 <FiPlus className="h-5 w-5" />
-                🚨 Report an Issue
+                Report an Issue
               </Link>
             </FadeIn>
           </div>
@@ -226,66 +229,66 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Stats Cards - Overlapping the header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20">
         <StaggerReveal stagger={100} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Total Accommodations */}
-          <div className="bg-white p-6 rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 group hover:border-blue-200 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-out">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-blue-50 rounded-xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+          <div className="bg-white p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 group hover:border-blue-200 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 ease-out">
+            <div className="flex items-center justify-between mb-5">
+              <div className="p-3.5 bg-blue-50/80 rounded-2xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
                 <FiShield className="h-6 w-6" />
               </div>
-              <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-full">Total</span>
+              <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full uppercase tracking-wider">Total</span>
             </div>
-            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Accommodations</p>
-            <p className="text-3xl font-extrabold text-gray-900 mt-1 transition-colors duration-300">{totalAccommodations}</p>
+            <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Accommodations</p>
+            <p className="text-3xl font-extrabold text-slate-900 transition-colors duration-300">{totalAccommodations}</p>
           </div>
           
           {/* High Risk (Unsafe) */}
-          <div className="bg-white p-6 rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 group hover:border-red-200 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-out">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-red-50 rounded-xl text-red-600 group-hover:bg-red-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+          <div className="bg-white p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 group hover:border-red-200 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 ease-out">
+            <div className="flex items-center justify-between mb-5">
+              <div className="p-3.5 bg-red-50/80 rounded-2xl text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
                 <FiAlertTriangle className="h-6 w-6" />
               </div>
               {highRiskCount > 0 ? (
-                <span className="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-full animate-pulse">Urgent</span>
+                <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse ring-1 ring-red-100">Urgent</span>
               ) : (
-                <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">All Clear</span>
+                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full uppercase tracking-wider">All Clear</span>
               )}
             </div>
-            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">High Risk (&lt;50)</p>
-            <p className={`text-3xl font-extrabold mt-1 transition-colors duration-300 ${highRiskCount > 0 ? 'text-red-600' : 'text-gray-900'}`}>
+            <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">High Risk (&lt;50)</p>
+            <p className={`text-3xl font-extrabold transition-colors duration-300 ${highRiskCount > 0 ? 'text-red-600' : 'text-slate-900'}`}>
               {highRiskCount}
             </p>
           </div>
 
           {/* Caution */}
-          <div className="bg-white p-6 rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 group hover:border-yellow-200 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-out">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-yellow-50 rounded-xl text-yellow-600 group-hover:bg-yellow-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+          <div className="bg-white p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 group hover:border-yellow-200 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 ease-out">
+            <div className="flex items-center justify-between mb-5">
+              <div className="p-3.5 bg-yellow-50/80 rounded-2xl text-yellow-600 group-hover:bg-yellow-600 group-hover:text-white transition-all duration-300">
                 <FiAlertCircle className="h-6 w-6" />
               </div>
               {riskyCount > 0 ? (
-                <span className="text-xs font-bold text-yellow-600 bg-yellow-50 px-2 py-1 rounded-full">Caution</span>
+                <span className="text-[10px] font-bold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-full uppercase tracking-wider">Caution</span>
               ) : (
-                <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">None</span>
+                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full uppercase tracking-wider">None</span>
               )}
             </div>
-            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Caution (50-79)</p>
-            <p className={`text-3xl font-extrabold mt-1 transition-colors duration-300 ${riskyCount > 0 ? 'text-yellow-600' : 'text-gray-900'}`}>
+            <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Caution (50-79)</p>
+            <p className={`text-3xl font-extrabold transition-colors duration-300 ${riskyCount > 0 ? 'text-yellow-600' : 'text-slate-900'}`}>
               {riskyCount}
             </p>
           </div>
 
           {/* Safe */}
-          <div className="bg-white p-6 rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 group hover:border-green-200 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-out">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-green-50 rounded-xl text-green-600 group-hover:bg-green-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+          <div className="bg-white p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 group hover:border-emerald-200 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 ease-out">
+            <div className="flex items-center justify-between mb-5">
+              <div className="p-3.5 bg-emerald-50/80 rounded-2xl text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
                 <FiCheckCircle className="h-6 w-6" />
               </div>
-              <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">Safe</span>
+              <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full uppercase tracking-wider">Safe</span>
             </div>
-            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Safe (80+)</p>
-            <p className="text-3xl font-extrabold text-green-600 mt-1 transition-colors duration-300">{safeCount}</p>
+            <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Safe (80+)</p>
+            <p className="text-3xl font-extrabold text-emerald-600 transition-colors duration-300">{safeCount}</p>
           </div>
         </StaggerReveal>
       </div>
@@ -301,32 +304,34 @@ export const Dashboard: React.FC = () => {
             <ScrollReveal delay={0} distance={20}>
               <Link 
                 to="/my-reports" 
-                className="flex items-center gap-4 p-6 bg-white rounded-2xl border border-gray-100 hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-300 group"
+                className="flex items-center gap-5 p-6 sm:p-8 bg-white rounded-3xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-blue-200 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1 active:scale-[0.99] transition-all duration-300 group"
               >
-                <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                  <FiList className="h-6 w-6" />
+                <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <FiList className="h-7 w-7" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900">My Safety Contributions</h3>
-                  <p className="text-sm text-gray-500">
+                  <h3 className="text-lg font-extrabold text-slate-900 mb-1">My Safety Contributions</h3>
+                  <p className="text-sm font-medium text-slate-500">
                     {userImpactCount > 0 
                       ? `You have ${userImpactCount} report${userImpactCount > 1 ? 's' : ''} - track their status`
                       : 'Track your reported issues and their status'
                     }
                   </p>
                 </div>
-                <FiArrowRight className="ml-auto text-gray-300 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all duration-300" />
+                <FiArrowRight className="ml-auto text-slate-300 w-6 h-6 group-hover:text-blue-500 group-hover:translate-x-1.5 transition-all duration-300" />
               </Link>
             </ScrollReveal>
 
             {/* Recent Activity Feed */}
             <ScrollReveal delay={100} distance={30}>
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                <div className="p-6 border-b border-gray-50 flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <FiActivity className="h-5 w-5 text-indigo-600" />
-                    <h2 className="text-xl font-bold text-gray-900">Recent Safety Reports</h2>
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full font-semibold">
+              <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
+                <div className="p-6 sm:p-8 border-b border-slate-50 flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+                      <FiActivity className="h-5 w-5" />
+                    </div>
+                    <h2 className="text-xl font-extrabold text-slate-900">Recent Safety Reports</h2>
+                    <span className="text-[10px] bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider hidden sm:inline-block">
                       {reports.length} total
                     </span>
                   </div>
@@ -408,27 +413,27 @@ export const Dashboard: React.FC = () => {
           <div className="space-y-8">
             {/* Safety Alerts */}
             <ScrollReveal delay={200} distance={30}>
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                <div className={`p-6 text-white flex items-center justify-between transition-colors duration-300 ${
-                  safetyAlerts.length > 0 ? 'bg-red-600' : 'bg-green-600'
+              <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
+                <div className={`p-6 sm:p-8 text-white flex items-center justify-between transition-colors duration-300 ${
+                  safetyAlerts.length > 0 ? 'bg-red-500' : 'bg-emerald-500'
                 }`}>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     {safetyAlerts.length > 0 ? (
-                      <FiAlertTriangle className="h-5 w-5 animate-pulse" />
+                      <FiAlertTriangle className="h-6 w-6 animate-pulse" />
                     ) : (
-                      <FiCheckCircle className="h-5 w-5" />
+                      <FiCheckCircle className="h-6 w-6" />
                     )}
-                    <h2 className="font-bold">
+                    <h2 className="text-xl font-extrabold tracking-tight">
                       {safetyAlerts.length > 0 ? 'Properties Need Attention' : 'All Properties Safe!'}
                     </h2>
                   </div>
                   {safetyAlerts.length > 0 && (
-                    <span className="text-xs bg-white/20 px-2 py-1 rounded-full font-semibold animate-pulse">
+                    <span className="text-[10px] bg-white/20 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider animate-pulse border border-white/20">
                       {safetyAlerts.length}
                     </span>
                   )}
                 </div>
-                <div className="p-2 divide-y divide-gray-50">
+                <div className="p-3 divide-y divide-slate-50">
                   {safetyAlerts.length > 0 ? (
                     <StaggerReveal stagger={75}>
                       {safetyAlerts.map((accommodation) => {
