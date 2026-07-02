@@ -197,12 +197,12 @@ export const Home: React.FC = () => {
             {/* Main Headline */}
             <ScrollReveal delay={100} distance={40}>
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
-                Your Safety.
+                Real Reviews.
                 <span className="block bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 text-transparent bg-clip-text">
-                  Their Accountability.
+                  Verified Safety.
                 </span>
                 <span className="block text-blue-300 text-3xl sm:text-4xl lg:text-5xl mt-2 font-bold">
-                  Zero Compromise.
+                  No Surprises.
                 </span>
               </h1>
             </ScrollReveal>
