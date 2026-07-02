@@ -108,8 +108,15 @@ app.use('/api/auth/register-owner', authLimiter);
 app.use('/api/profile/password', authLimiter);
 app.use('/api/', apiLimiter);
 
-app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.json({ limit: '1mb' }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  dotfiles: 'deny',
+  index: false,
+  setHeaders: (res) => {
+    res.set('X-Content-Type-Options', 'nosniff');
+    res.set('Cache-Control', 'no-store');
+  }
+}));
 app.use("/api/auth", authRoutes);
 
 // ============================================================
@@ -155,7 +162,10 @@ app.post('/api/upload', authMiddleware, upload.array('images', 5), async (req, r
       } catch (cloudErr) {
         // Fall back to local disk storage
         console.warn('[Upload] Cloudinary failed, saving locally:', cloudErr.message);
-        const ext = file.originalname.split('.').pop() || 'jpg';
+        const rawExt = (file.originalname.split('.').pop() || 'jpg').toLowerCase();
+        // Only allow safe image extensions
+        const safeExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        const ext = safeExtensions.includes(rawExt) ? rawExt : 'jpg';
         const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
         const filepath = path.join(uploadsDir, filename);
         fs.writeFileSync(filepath, file.buffer);
@@ -174,7 +184,7 @@ app.post('/api/upload', authMiddleware, upload.array('images', 5), async (req, r
     });
   } catch (error) {
     console.error('[Upload] Error:', error);
-    res.status(500).json({ success: false, message: 'Error uploading images', error: error.message });
+    res.status(500).json({ success: false, message: 'Error uploading images' });
   }
 });
 
@@ -183,9 +193,23 @@ app.delete('/api/upload/:publicId', authMiddleware, async (req, res) => {
     const { publicId } = req.params;
 
     if (publicId.startsWith('local-')) {
-      // Delete local file
+      // Delete local file — prevent path traversal
       const filename = publicId.replace('local-', '');
+      
+      // Block any path traversal characters
+      if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
+        return res.status(400).json({ success: false, message: 'Invalid filename' });
+      }
+      
       const filepath = path.join(uploadsDir, filename);
+      
+      // Ensure resolved path is still inside uploadsDir
+      const resolvedPath = path.resolve(filepath);
+      const resolvedUploadsDir = path.resolve(uploadsDir);
+      if (!resolvedPath.startsWith(resolvedUploadsDir)) {
+        return res.status(400).json({ success: false, message: 'Invalid file path' });
+      }
+      
       if (fs.existsSync(filepath)) {
         fs.unlinkSync(filepath);
       }
@@ -200,7 +224,7 @@ app.delete('/api/upload/:publicId', authMiddleware, async (req, res) => {
     res.json({ success: true, message: 'Image deleted successfully' });
   } catch (error) {
     console.error('Delete error:', error);
-    res.status(500).json({ success: false, message: 'Error deleting image', error: error.message });
+    res.status(500).json({ success: false, message: 'Error deleting image' });
   }
 });
 
@@ -249,10 +273,11 @@ app.get('/api/reports/my-reports', authMiddleware, async (req, res) => {
   }
 });
 
-// Get all reports (public)
+// Get all reports (public — strips reporter identity for anonymity)
 app.get('/api/reports', async (req, res) => {
   try {
     const reports = await Report.find()
+      .select('accommodationName accommodation issueType description images createdAt status upvotes upvotedBy aiVerification')
       .populate('accommodation', 'name address city')
       .sort({ createdAt: -1 })
       .lean();
@@ -264,7 +289,7 @@ app.get('/api/reports', async (req, res) => {
     console.error("FETCH ERROR:", error.message);
     res.status(500).json({
       success: false,
-      message: error.message
+      message: 'Error fetching reports'
     });
   }
 });
@@ -1915,6 +1940,9 @@ app.put('/api/profile/notifications', authMiddleware, async (req, res) => {
 app.use('/api/otp/send-verification', authLimiter);
 app.use('/api/otp/send-college-verification', authLimiter);
 app.use('/api/otp/forgot-password', authLimiter);
+app.use('/api/otp/verify-email', authLimiter);
+app.use('/api/otp/verify-college', authLimiter);
+app.use('/api/otp/reset-password', authLimiter);
 
 app.post('/api/otp/send-verification', async (req, res) => {
   try {
@@ -2115,7 +2143,8 @@ app.post('/api/otp/forgot-password', async (req, res) => {
 
     const user = await User.findOne({ email: normalizedEmail });
     if (!user) {
-      return res.status(400).json({ success: false, message: 'No account found with this email' });
+      // Don't reveal whether the account exists — return same response
+      return res.json({ success: true, message: 'If an account with that email exists, a reset OTP has been sent.' });
     }
 
     await OTP.deleteMany({ email: normalizedEmail, type: 'password-reset' });

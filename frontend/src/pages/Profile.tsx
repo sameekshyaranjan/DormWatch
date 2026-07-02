@@ -365,10 +365,20 @@ export default function Profile() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-[#f8fafc] pb-24 relative overflow-hidden font-sans">
+      {/* Ambient Background Glows */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-400/10 blur-[120px]" />
+        <div className="absolute top-[30%] -right-[10%] w-[40%] h-[60%] rounded-full bg-indigo-400/10 blur-[120px]" />
+        <div className="absolute -bottom-[20%] left-[20%] w-[60%] h-[50%] rounded-full bg-teal-400/10 blur-[120px]" />
+      </div>
+
+      <div className="relative z-10">
       {/* Header - DYNAMIC GRADIENT BASED ON ROLE */}
-      <div className={`pt-16 pb-32 ${isOwner ? 'bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900' : 'bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={`pt-16 pb-40 relative overflow-hidden ${isOwner ? 'bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900' : 'bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-900'}`}>
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Top Navigation */}
           <div className="flex items-center justify-between mb-10">
             <Link 
@@ -479,15 +489,16 @@ export default function Profile() {
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row items-center gap-8">
+          <div className="flex flex-col md:flex-row items-center gap-10">
             {/* Profile Photo */}
-            <div className="relative">
-              <div className={`w-24 h-24 sm:w-32 sm:h-32 rounded-[2rem] ${isOwner ? 'bg-gradient-to-br from-emerald-500 to-teal-600' : 'bg-gradient-to-br from-blue-500 to-indigo-600'} flex items-center justify-center text-4xl sm:text-5xl font-black text-white shadow-2xl ${isOwner ? 'shadow-emerald-900/50' : 'shadow-blue-900/50'} border-4 border-white/10 overflow-hidden`}>
+            <div className="relative group perspective">
+              <div className="absolute inset-0 bg-gradient-to-tr from-blue-400 to-emerald-400 rounded-[2rem] blur-xl opacity-40 group-hover:opacity-70 transition-opacity duration-500"></div>
+              <div className={`relative w-28 h-28 sm:w-36 sm:h-36 rounded-[2rem] ${isOwner ? 'bg-gradient-to-br from-emerald-400 to-teal-600' : 'bg-gradient-to-br from-blue-400 to-indigo-600'} flex items-center justify-center text-4xl sm:text-5xl font-black text-white shadow-2xl ${isOwner ? 'shadow-emerald-900/50' : 'shadow-blue-900/50'} border-4 border-white/20 overflow-hidden transform transition-transform duration-500 group-hover:scale-105`}>
                 {profile?.profilePhoto ? (
                   <img 
                     src={profile.profilePhoto} 
                     alt={profile.name} 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                 ) : (
                   profile?.name.charAt(0).toUpperCase()
@@ -640,7 +651,7 @@ export default function Profile() {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20">
         {/* Role-based Stats Grid */}
         {isOwner ? (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
@@ -650,13 +661,13 @@ export default function Profile() {
               { label: 'Total Reports', value: profile?.totalReportsOnProperties || 0, icon: <FiFileText />, color: 'text-yellow-600', bg: 'bg-yellow-50' },
               { label: 'Resolution Rate', value: `${profile?.resolutionRate || 0}%`, icon: <FiCheckCircle />, color: 'text-green-600', bg: 'bg-green-50' }
             ].map((stat, i) => (
-              <div key={i} className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 flex items-center gap-6 transition-all hover:scale-[1.02] hover:shadow-xl">
-                <div className={`w-16 h-16 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center text-3xl flex-shrink-0`}>
+              <div key={i} className="bg-white/70 backdrop-blur-xl rounded-[2rem] shadow-xl shadow-slate-200/50 p-8 border border-white flex items-center gap-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-300/60 group">
+                <div className={`w-16 h-16 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
                   {stat.icon}
                 </div>
                 <div>
-                  <p className="text-3xl font-black text-slate-900">{stat.value}</p>
-                  <p className="text-xs font-black text-gray-400 uppercase tracking-widest mt-1">{stat.label}</p>
+                  <p className="text-3xl font-black text-slate-900 tracking-tight">{stat.value}</p>
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest mt-1">{stat.label}</p>
                 </div>
               </div>
             ))}
@@ -668,13 +679,13 @@ export default function Profile() {
               { label: 'Confirmations Received', value: profile?.totalUpvotes || 0, icon: <FiAward />, color: 'text-indigo-600', bg: 'bg-indigo-50' },
               { label: 'Issues Resolved', value: profile?.resolvedReports || 0, icon: <FiCheckCircle />, color: 'text-green-600', bg: 'bg-green-50' }
             ].map((stat, i) => (
-              <div key={i} className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 flex items-center gap-6 transition-all hover:scale-[1.02] hover:shadow-xl">
-                <div className={`w-16 h-16 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center text-3xl flex-shrink-0`}>
+              <div key={i} className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-xl shadow-slate-200/40 p-8 border border-white flex items-center gap-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-300/50 group">
+                <div className={`w-16 h-16 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
                   {stat.icon}
                 </div>
                 <div>
-                  <p className="text-3xl font-black text-slate-900">{stat.value}</p>
-                  <p className="text-xs font-black text-gray-400 uppercase tracking-widest mt-1">{stat.label}</p>
+                  <p className="text-3xl font-black text-slate-900 tracking-tight">{stat.value}</p>
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest mt-1">{stat.label}</p>
                 </div>
               </div>
             ))}
@@ -685,8 +696,8 @@ export default function Profile() {
           <div className="lg:col-span-2 space-y-8">
             
             {/* Personal Information */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-              <div className="p-8 border-b border-gray-50 flex items-center justify-between">
+            <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-white overflow-hidden">
+              <div className="p-8 border-b border-gray-100/50 flex items-center justify-between bg-gradient-to-r from-transparent to-white/50">
                 <div className="flex items-center gap-3">
                   <div className={`p-2.5 ${isOwner ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600'} rounded-xl`}>
                     <FiUser className="h-5 w-5" />
@@ -763,8 +774,8 @@ export default function Profile() {
             </div>
 
             {/* Security Settings */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-              <div className="p-8 border-b border-gray-50 flex items-center gap-3">
+            <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-white overflow-hidden">
+              <div className="p-8 border-b border-gray-100/50 flex items-center gap-3 bg-gradient-to-r from-transparent to-white/50">
                 <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
                   <FiLock className="h-5 w-5" />
                 </div>
@@ -985,6 +996,8 @@ export default function Profile() {
             </div>
           </div>
         </div>
+      </div>
+
       </div>
 
       <CollegeVerificationModal 

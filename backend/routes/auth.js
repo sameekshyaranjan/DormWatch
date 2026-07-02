@@ -1,6 +1,11 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('WARNING: JWT_SECRET is not set. Authentication will fail.');
+}
 const multer = require("multer");
 const { cloudinary } = require("../config/cloudinary");
 const User = require("../models/User");
@@ -249,7 +254,7 @@ router.post("/login", async (req, res) => {
       // Owner is not verified - still generate token but flag it
       jwt.sign(
         payload,
-        process.env.JWT_SECRET || "default_secret",
+        JWT_SECRET,
         { expiresIn: "7d" },
         (err, token) => {
           if (err) throw err;
@@ -279,7 +284,7 @@ router.post("/login", async (req, res) => {
     // ✅ Normal login flow (verified owner or student)
     jwt.sign(
       payload,
-      process.env.JWT_SECRET || "default_secret",
+      JWT_SECRET,
       { expiresIn: "7d" },
       (err, token) => {
         if (err) throw err;
@@ -447,7 +452,7 @@ router.post("/register-owner", upload.fields([
 
     jwt.sign(
       payload,
-      process.env.JWT_SECRET || "default_secret",
+      JWT_SECRET,
       { expiresIn: "7d" },
       (err, token) => {
         if (err) {

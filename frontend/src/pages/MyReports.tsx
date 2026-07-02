@@ -278,42 +278,41 @@ export default function MyReports() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-[#FAFAFA] pb-24 font-sans text-slate-900">
       {/* Header */}
-      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 pt-16 pb-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-blue-600/5 mix-blend-overlay"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <Link to="/dashboard" className="inline-flex items-center text-blue-300 hover:text-white mb-10 font-bold transition-all gap-2">
+      <div className="bg-white border-b border-gray-200 pt-16 pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link to="/dashboard" className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-8 font-semibold transition-colors gap-2 text-sm">
             <FiArrowLeft /> Back to Dashboard
           </Link>
           
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
             <div>
-              <h1 className="text-4xl lg:text-5xl font-black text-white tracking-tight mb-4">
+              <h1 className="text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight mb-3">
                 Your Safety Reports
               </h1>
-              <p className="text-xl text-blue-200 font-medium max-w-2xl">
+              <p className="text-gray-500 font-medium max-w-2xl">
                 Track the impact of your contributions and manage your verified safety reports.
               </p>
             </div>
             <Link
               to="/report"
-              className="bg-white text-slate-900 px-8 py-4 rounded-2xl font-black shadow-xl hover:bg-blue-50 transition-all flex items-center gap-2 whitespace-nowrap"
+              className="bg-slate-900 text-white px-6 py-3 rounded-lg font-semibold shadow-sm hover:bg-slate-800 transition-colors flex items-center gap-2 whitespace-nowrap text-sm"
             >
-              <FiPlus className="text-xl" /> Report New Issue
+              <FiPlus /> Report New Issue
             </Link>
           </div>
 
           {/* Header Stats Row */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
             {stats.map((stat, i) => (
-              <div key={i} className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-[2rem] flex items-center gap-4">
-                <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center text-xl`}>
+              <div key={i} className="bg-white border border-gray-200 p-5 rounded-xl flex items-center gap-4 transition-shadow hover:shadow-md">
+                <div className={`w-10 h-10 ${stat.bg} ${stat.color} rounded-lg flex items-center justify-center text-lg`}>
                   {stat.icon}
                 </div>
                 <div>
-                  <p className="text-2xl font-black text-white">{stat.value}</p>
-                  <p className="text-[10px] font-black text-blue-200/60 uppercase tracking-widest leading-none">{stat.label}</p>
+                  <p className="text-2xl font-bold text-slate-900 tracking-tight">{stat.value}</p>
+                  <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mt-0.5">{stat.label}</p>
                 </div>
               </div>
             ))}
@@ -321,9 +320,9 @@ export default function MyReports() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         {/* Filters Card */}
-        <div className="bg-white rounded-3xl shadow-xl p-6 lg:p-8 mb-10 border border-gray-100">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:p-6 mb-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex gap-2 flex-wrap items-center">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mr-2 flex items-center gap-2">
@@ -343,10 +342,10 @@ export default function MyReports() {
                 <button
                   key={filter.id}
                   onClick={() => setActiveFilter(filter.id)}
-                  className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
                     activeFilter === filter.id 
-                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25' 
-                      : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                      ? 'bg-slate-900 text-white shadow-sm' 
+                      : 'bg-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-900'
                   }`}
                 >
                   {filter.label}
@@ -369,26 +368,26 @@ export default function MyReports() {
 
         {/* Content Section */}
         {filteredReports.length === 0 ? (
-          <div className="text-center py-24 bg-white rounded-[2.5rem] shadow-sm border border-gray-100 max-w-2xl mx-auto">
-            <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-8">
+          <div className="text-center py-20 bg-white rounded-xl shadow-sm border border-gray-200 max-w-2xl mx-auto">
+            <div className="w-16 h-16 bg-gray-50 border border-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <FiFileText className="text-gray-300 text-4xl" />
             </div>
-            <h3 className="text-2xl font-black text-slate-900 mb-2">
+            <h3 className="text-xl font-bold text-slate-900 mb-2">
               {reports.length === 0 
                 ? "You haven't filed any reports yet" 
                 : "No reports match your filters"
               }
             </h3>
-            <p className="text-slate-500 font-medium mb-10 max-w-sm mx-auto px-4">
+            <p className="text-gray-500 text-sm mb-8 max-w-sm mx-auto px-4">
               {reports.length === 0 
-                ? "Spotted a safety issue? Your voice matters! Your contributions can protect thousands of other students."
+                ? "Spotted a safety issue? Your voice matters. Your contributions can protect thousands of other students."
                 : "Try adjusting your filters or search query."
               }
             </p>
             {reports.length === 0 ? (
               <Link 
                 to="/report" 
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-4 rounded-2xl font-black shadow-xl shadow-blue-500/25 hover:shadow-2xl transition-all inline-flex items-center gap-2"
+                className="bg-slate-900 text-white px-6 py-3 rounded-lg font-semibold shadow-sm hover:bg-slate-800 transition-colors inline-flex items-center gap-2 text-sm"
               >
                 Report an Issue <FiArrowRight />
               </Link>
@@ -398,7 +397,7 @@ export default function MyReports() {
                   setActiveFilter('all');
                   setSearchQuery('');
                 }}
-                className="bg-gray-100 text-gray-700 px-10 py-4 rounded-2xl font-black hover:bg-gray-200 transition-all inline-flex items-center gap-2"
+                className="bg-white border border-gray-200 text-slate-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors inline-flex items-center gap-2 text-sm shadow-sm"
               >
                 Clear Filters <FiX />
               </button>
@@ -420,24 +419,24 @@ export default function MyReports() {
         )}
 
         {/* Impact Message */}
-        <div className="mt-16 p-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-10 opacity-10">
+        <div className="mt-16 p-8 bg-slate-900 rounded-xl shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-5">
             <FiAward className="w-48 h-48 text-white" />
           </div>
           <div className="relative z-10 max-w-3xl">
-            <h3 className="text-3xl font-black text-white mb-4">Safety Champion Status</h3>
-            <p className="text-xl text-blue-100 font-medium mb-8">
+            <h3 className="text-2xl font-bold text-white mb-3">Safety Champion Status</h3>
+            <p className="text-gray-400 font-medium mb-6">
               Your verified reports have helped thousands of students make safer housing choices. Keep contributing to build a more transparent accommodation network.
             </p>
-            <div className="flex items-center gap-6">
-              <div className="flex -space-x-3">
+            <div className="flex items-center gap-4">
+              <div className="flex -space-x-2">
                 {[1, 2, 3, 4, 5].map(i => (
-                  <div key={i} className="w-12 h-12 rounded-full border-4 border-blue-600 bg-blue-100 flex items-center justify-center font-black text-blue-600 text-xs">
+                  <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center font-bold text-slate-300 text-xs">
                     {String.fromCharCode(64 + i)}
                   </div>
                 ))}
               </div>
-              <p className="text-sm font-bold text-blue-100">Joined by 10,000+ students nationwide</p>
+              <p className="text-sm font-semibold text-gray-400">Joined by 10,000+ students nationwide</p>
             </div>
           </div>
         </div>
