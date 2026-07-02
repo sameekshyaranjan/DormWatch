@@ -1,6 +1,6 @@
 <div align="center">
-  <h1>🛡️ DormWatch</h1>
-  <p><strong>The AI-Powered Safety Intelligence Network for Student Accommodations in India.</strong></p>
+  <h1>🛡️ SafeStay</h1>
+  <p><strong>The Next-Generation Safety Intelligence Network for Student Accommodations in India.</strong></p>
 
   <a href="https://dormwatch-six.vercel.app/"><strong>Explore the Live Demo »</strong></a>
   <br />
@@ -9,7 +9,7 @@
   <!-- Badges -->
   <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen" alt="Status" />
   <img src="https://img.shields.io/badge/Stack-React%20%7C%20Node.js%20%7C%20MongoDB-blue" alt="Tech Stack" />
-  <img src="https://img.shields.io/badge/AI-3--Model%20Consensus-purple" alt="AI Verification" />
+  <img src="https://img.shields.io/badge/Email-SendGrid-009DD9?logo=sendgrid&logoColor=white" alt="SendGrid Auth" />
   <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License" />
 </div>
 
@@ -19,20 +19,22 @@
 
 Finding safe, reliable student accommodation in India often relies on easily manipulated reviews, biased broker suggestions, and misleading advertisements. Students frequently face hidden issues related to food poisoning, water contamination, unhygienic conditions, and severe security threats that only become apparent after moving in.
 
-**DormWatch** solves this by providing a verified, student-driven safety intelligence platform. We ensure authenticity by restricting reporting privileges exclusively to students with verified Indian college email addresses. Property owners must similarly pass a strict document verification process before they can list or manage accommodations.
+**SafeStay** solves this by providing a verified, student-driven safety intelligence platform. We ensure authenticity by generating dynamic safety scores based entirely on real, verified student reports and owner resolutions. 
 
-At the core of the platform is a fully automated, **3-model AI verification pipeline** that processes every safety report (including text and images) to confirm its legitimacy before it affects an accommodation's score. The platform dynamically computes a **DormWatch Safety Index (DSI)** score for every property, projecting it onto an interactive map so students can make data-driven housing decisions.
+At the core of the platform is the **SafeStay Safety Index (SSI)** score. This score is dynamically computed for every property and projected onto an interactive map, allowing students to make data-driven, life-saving housing decisions before signing a lease.
 
 ---
 
 ## ✨ Key Features
 
-- 🧠 **AI-Powered Report Verification**: Every report is verified in parallel by Mistral Pixtral 12B (vision), Groq Llama 3.3 70B (context), and Gemini 2.0 Flash (secondary validation). A 2-of-3 consensus is required to auto-approve reports.
-- 📊 **DormWatch Safety Index (DSI)**: A dynamic 0–100 score per accommodation based on report severity, time decay (365 days), and issue resolution status. 
-- 🔐 **Verified-Only Ecosystem**: Reporting is restricted to users with verified Indian college emails. Property management is restricted to owners who submit Government IDs and property deeds for admin approval.
-- 🗺️ **Interactive Safety Map**: Location-based discovery using OpenStreetMap and Leaflet, featuring DSI-color-coded markers (Red/Yellow/Green), GPS integration, and radius filtering.
-- ✅ **Resolution Lifecycle**: Owners can submit evidence to resolve reported issues. The original reporting student must verify the fix before the DSI penalty is reduced. 
-- 💬 **Multilingual & Accessibility Support**: Available in English, Hindi, and Telugu, featuring AI-generated Text-to-Speech (ElevenLabs) audio summaries for accessibility.
+- 🔐 **Universal OTP Authentication**: Seamless and secure login using SendGrid's robust email API, guaranteeing instant OTP delivery to any email address without spam blocks.
+- 📊 **SafeStay Safety Index (SSI)**: A dynamic 0–100 safety score assigned to every accommodation based on the severity of student reports, 365-day time decay, and owner resolution speed. 
+- 🤝 **Dual Portal Ecosystem**: 
+  - **Student Portal**: Empowering students to anonymously report hazards, upload photo evidence, and explore housing safely.
+  - **Owner Portal**: A dedicated dashboard for property owners to officially respond to claims, upload proof of resolution, and actively rebuild their trust scores.
+- 🗺️ **Interactive Safety Map**: A visually stunning, location-based discovery engine powered by Leaflet. Features SSI-color-coded markers (Red/Yellow/Green) and live GPS integration to find the safest PGs nearby.
+- ✅ **Closed-Loop Resolution Lifecycle**: Owners submit evidence to resolve reported issues, but the original reporting student holds the power to verify or dispute the fix before the penalty is lifted.
+- 💬 **Multilingual & Accessibility Ready**: Designed for maximum accessibility across diverse student demographics in India.
 
 ---
 
@@ -40,21 +42,17 @@ At the core of the platform is a fully automated, **3-model AI verification pipe
 
 **Frontend (Deployed on Vercel)**
 - React 19 (Vite, TypeScript)
-- Tailwind CSS 4 & Framer Motion
+- Tailwind CSS 4 & Framer Motion (Glassmorphism & Micro-animations)
 - Zustand (State Management) & React Router v7
-- Leaflet & React-Leaflet (Mapping)
-- shadcn/ui & Recharts (Data Viz)
+- Leaflet & React-Leaflet (Interactive Mapping)
+- shadcn/ui & Recharts (Data Visualization)
 
 **Backend (Deployed on Render)**
 - Node.js & Express.js 5
 - MongoDB Atlas & Mongoose 9
-- JWT & bcryptjs (Auth & Security)
-- Cloudinary (Image & File Storage)
-- Nodemailer (OTP & Email Services)
-
-**AI & Third-Party Integrations**
-- Mistral API, Groq API, Gemini API
-- ElevenLabs (Text-to-Speech)
+- SendGrid SDK (Universal OTP & Transactional Emails)
+- JWT & bcryptjs (Authentication & Security)
+- Cloudinary (Image & Evidence Storage)
 
 ---
 
@@ -64,23 +62,15 @@ At the core of the platform is a fully automated, **3-model AI verification pipe
 graph TD
     Client[React Frontend] --> |Submits Report + Images| API[Express API]
     API --> |Images| CDN[Cloudinary]
-    API --> |Parallel Verification| AI_Layer
+    API --> |Sends OTP| SG[SendGrid API]
     
-    subgraph AI_Layer [AI Consensus Pipeline]
-        Mistral[Mistral Pixtral 12B<br>Vision Analysis]
-        Groq[Groq Llama 3.3 70B<br>Context Validation]
-        Gemini[Gemini 2.0 Flash<br>Cross-Check]
-    end
+    API --> |Validates Report| DB[(MongoDB Atlas)]
     
-    Mistral --> Consensus{2/3<br>Consensus}
-    Groq --> Consensus
-    Gemini --> Consensus
+    DB --> |Triggers| DSICalc[SSI Scoring Engine]
+    DSICalc --> |Updates Trust Score| DB
     
-    Consensus --> |VERIFIED / REJECTED| DB[(MongoDB Atlas)]
-    Consensus --> |NEEDS_REVIEW| Admin[Admin Dashboard]
-    
-    DB --> |Triggers| DSICalc[DSI Scoring Engine]
-    DSICalc --> |Updates Score| DB
+    Owner[Owner Dashboard] --> |Submits Resolution| API
+    API --> |Notifies Student| SG
 ```
 
 ---
@@ -90,7 +80,7 @@ graph TD
 ### Prerequisites
 - Node.js 18+ and npm
 - MongoDB Atlas account (or local MongoDB)
-- API Keys for Cloudinary, Mistral, Groq, Gemini, and ElevenLabs (optional).
+- API Keys for Cloudinary and SendGrid.
 
 ### 1. Clone & Install
 ```bash
@@ -107,19 +97,24 @@ npm install
 ```
 
 ### 2. Environment Variables
-Create a `.env` file in the `backend` directory based on `.env.example`:
+Create a `.env` file in the `backend` directory:
 ```env
-MONGO_URI=mongodb+srv://<user>:<password>@cluster0.mongodb.net/dormwatch
+MONGO_URI=mongodb+srv://<user>:<password>@cluster0.mongodb.net/safestay
 JWT_SECRET=your_jwt_secret_key_minimum_32_characters
 PORT=5000
-EMAIL_USER=your_gmail_address
-EMAIL_PASS=your_gmail_app_password
-# Add your Cloudinary and AI API keys here
+
+# SendGrid API Configuration
+SENDGRID_API_KEY=SG.your_sendgrid_api_key
+
+# Cloudinary Configuration
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 Create a `.env` file in the `frontend` directory:
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000
 ```
 
 ### 3. Run the Application
@@ -136,44 +131,41 @@ npm run dev
 cd frontend
 npm run dev
 ```
-Access the application at `http://localhost:5173`.
+Access the application locally at `http://localhost:5173`.
 
 ---
 
 ## 📁 Project Structure
 
 ```text
-DormWatch/
+SafeStay/
 ├── frontend/                     # React Frontend (Vercel)
 │   ├── src/
-│   │   ├── components/         # Reusable UI components
-│   │   ├── contexts/           # React Context providers
-│   │   ├── hooks/              # Custom React hooks
-│   │   ├── pages/              # Page-level components
-│   │   ├── services/           # API integration
-│   │   └── stores/             # Zustand global state
+│   │   ├── components/         # Reusable UI components & Maps
+│   │   ├── contexts/           # Auth & State Providers
+│   │   ├── pages/              # Auth, Dashboards, and Discovery views
+│   │   └── services/           # Axios/Fetch API integrations
 │   └── vite.config.ts
 ├── backend/                     # Node.js Backend (Render)
 │   ├── src/
-│   │   ├── config/             # DB and external service configs
 │   │   ├── controllers/        # Route logic handlers
 │   │   ├── middleware/         # Auth, roles, and rate limiters
-│   │   ├── models/             # Mongoose schemas
-│   │   ├── routes/             # Express route definitions
-│   │   ├── services/           # AI pipelines and voice generation
-│   │   └── utils/              # Scoring logic and email templates
-│   └── package.json
+│   │   ├── models/             # Mongoose schemas (User, Accommodation, Report)
+│   │   ├── routes/             # Express API definitions
+│   │   └── utils/              # SSI Scoring, SendGrid Emailing
+│   ├── seed_pgs.js              # Database population script
+│   └── server.js                # Express Server Entry Point
 └── README.md
 ```
 
 ---
 
 ## 🔒 Security Best Practices Implemented
-- **Robust JWT Handling:** Secure secrets and standard authentication practices.
-- **Rate Limiting:** IP-based rate limiting on sensitive routes (login, forgot-password, reports) to prevent abuse and brute-force attacks.
-- **Path Traversal Protection:** Hardened file upload and file access logic.
+- **Robust JWT Handling:** Secure secrets and standard authentication practices across both portals.
+- **Rate Limiting:** IP-based rate limiting on sensitive routes (login, registration) to prevent abuse and brute-force attacks.
+- **Universal OTP Protection:** Prevents fake account creation while ensuring 100% deliverability through SendGrid.
 - **Role-Based Access Control (RBAC):** Strict middleware checks ensuring students cannot access property owner endpoints and vice versa.
-- **Data Privacy:** Passwords and sensitive metadata are stripped from API responses.
+- **Data Privacy:** Passwords and sensitive metadata are stripped from API responses before reaching the client.
 
 ---
 
