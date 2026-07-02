@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { VerifiedBadge } from '../components/VerifiedBadge';
 import { CollegeVerificationModal } from '../components/CollegeVerificationModal';
@@ -66,9 +66,9 @@ export default function Profile() {
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [showCollegeModal, setShowCollegeModal] = useState(false);
-
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showCollegeModal, setShowCollegeModal] = useState(location.state?.openCollegeModal || false);
   const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const isOwner = user?.role === 'owner';

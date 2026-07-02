@@ -294,7 +294,7 @@ export const ReportIncident: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
-                onClick={() => navigate('/verify-college')}
+                onClick={() => navigate('/profile', { state: { openCollegeModal: true } })}
                 className="bg-amber-500 text-white px-8 py-4 rounded-xl font-bold hover:bg-amber-600 transition-all flex items-center justify-center gap-2 shadow-lg"
               >
                 <FiBook /> Verify College Email
