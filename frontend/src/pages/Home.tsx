@@ -284,7 +284,7 @@ export const Home: React.FC = () => {
             </FadeIn>
             <ScrollReveal delay={100}>
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Students Are <span className="text-red-600">Gambling</span> With Their Safety
+                Stop <span className="text-red-600">Guessing</span> About Your Living Conditions
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 Every year, thousands of students face these issues — and most discover them AFTER signing the lease.
