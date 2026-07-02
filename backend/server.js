@@ -65,17 +65,26 @@ app.use(helmet({
 
 app.use(cors({
   origin: function(origin, callback) {
+    // Clean up trailing slash from environment variable if it exists
+    let envUrl = process.env.FRONTEND_URL;
+    if (envUrl && envUrl.endsWith('/')) {
+      envUrl = envUrl.slice(0, -1);
+    }
+
     const allowedOrigins = [
       'http://localhost:5173',
       'http://localhost:5174',
       'http://localhost:5175',
       'http://localhost:3000',
-      process.env.FRONTEND_URL
+      'https://dormwatch-six.vercel.app', // Hardcoded fallback for the exact live deployment
+      envUrl
     ].filter(Boolean);
 
+    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.warn(`[CORS Blocked] Origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
