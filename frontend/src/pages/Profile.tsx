@@ -109,14 +109,19 @@ export default function Profile() {
         }
       });
       const data = await response.json();
-      if (data.success) {
+      if (response.ok) {
         setProfile(data.data);
         setNewName(data.data.name);
         if (data.data.notificationPrefs) {
           setNotificationPrefs(data.data.notificationPrefs);
         }
       } else {
-        setError(data.message || 'Failed to load profile');
+        setError(data.message || 'Failed to fetch profile');
+        if (response.status === 401 || response.status === 404) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          navigate('/login');
+        }
       }
     } catch {
       setError('Error connecting to server');
