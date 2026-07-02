@@ -1,5 +1,7 @@
 # DormWatch
 > **The AI-Powered Safety Intelligence Network for Student Accommodations in India.**
+> 
+> 🌐 **Live Demo:** [https://dormwatch-six.vercel.app/](https://dormwatch-six.vercel.app/)
 
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
 ![Tech Stack](https://img.shields.io/badge/Stack-React%20%7C%20Node.js%20%7C%20MongoDB-blue)
