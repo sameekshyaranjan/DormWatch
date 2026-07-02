@@ -350,29 +350,36 @@ export const Home: React.FC = () => {
             </ScrollReveal>
           </div>
 
-          <StaggerReveal stagger={120} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="mt-12 max-w-4xl mx-auto space-y-6">
             {howItWorks.map((step, i) => (
-              <div key={i} className="relative">
-                {/* Connector Line */}
-                {i < howItWorks.length - 1 && (
-                  <div className="hidden lg:block absolute top-12 left-full w-full h-0.5 bg-gradient-to-r from-blue-300 to-transparent z-0"></div>
-                )}
-                
-                <div className="relative bg-white rounded-2xl p-6 shadow-lg hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-out border border-gray-100 z-10">
-                  {/* Step Number */}
-                  <div className="absolute -top-4 -left-4 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold flex items-center justify-center text-lg shadow-lg">
-                    {step.step}
+              <StaggerReveal key={i} stagger={100} delay={i * 100}>
+                <div className="group flex flex-col sm:flex-row items-center sm:items-start gap-6 bg-white rounded-3xl p-6 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-16 -mt-16 transition-transform duration-500 group-hover:scale-150 opacity-50 z-0"></div>
+                  
+                  <div className="flex-shrink-0 relative z-10">
+                    <div className="absolute inset-0 bg-blue-400 rounded-2xl blur-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                    <div className="relative w-20 h-20 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                      {step.icon}
+                      <div className="absolute -bottom-3 -right-3 w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center border-4 border-white shadow-sm">
+                        {step.step}
+                      </div>
+                    </div>
                   </div>
                   
-                  <div className="flex justify-center text-blue-600 mb-4 mt-2">
-                    {step.icon}
+                  <div className="flex-1 text-center sm:text-left z-10 pt-2">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{step.title}</h3>
+                    <p className="text-gray-600 text-lg leading-relaxed">{step.description}</p>
                   </div>
-                  <h3 className="font-bold text-gray-900 text-lg mb-2 text-center">{step.title}</h3>
-                  <p className="text-gray-600 text-sm text-center">{step.description}</p>
+                  
+                  <div className="hidden sm:flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-300 self-center z-10">
+                    <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                      <FiArrowRight className="w-6 h-6" />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </StaggerReveal>
             ))}
-          </StaggerReveal>
+          </div>
 
           {/* CTA */}
           <ScrollReveal delay={0}>
