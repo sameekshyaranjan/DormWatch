@@ -505,64 +505,69 @@ export const Home: React.FC = () => {
       </div>
 
       {/* ================= STAKEHOLDER BENEFITS ================= */}
-      <div className="py-16 lg:py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+      <div className="py-24 lg:py-32 bg-white relative overflow-hidden">
+        {/* Soft transition from dark above */}
+        <div className="absolute top-0 w-full h-40 bg-gradient-to-b from-[#050A15] to-transparent opacity-10"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-20">
             <FadeIn delay={0}>
-              <span className="inline-block px-4 py-1 rounded-full bg-purple-100 text-purple-700 text-sm font-semibold mb-4">
-                FOR EVERYONE
+              <span className="inline-block px-5 py-2 rounded-full bg-gray-100 text-gray-900 text-xs font-black tracking-widest uppercase mb-6 shadow-sm">
+                Built For Everyone
               </span>
             </FadeIn>
             <ScrollReveal delay={100}>
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Built for <span className="text-purple-600">Students, Parents & Owners</span>
+              <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight leading-tight">
+                One Platform. <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Three Distinct Visions.</span>
               </h2>
             </ScrollReveal>
           </div>
 
-          <StaggerReveal stagger={150} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {stakeholderBenefits.map((stakeholder, i) => (
+          <StaggerReveal stagger={150} className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
+            {stakeholderBenefits.map((stakeholder, i) => {
+              const colorObj = stakeholder.color === 'blue' ? { bg: 'bg-blue-600', bgSoft: 'bg-blue-50', text: 'text-blue-600', hoverBg: 'hover:bg-blue-700', shadow: 'shadow-[0_8px_20px_-6px_rgba(37,99,235,0.5)]' } :
+                             stakeholder.color === 'green' ? { bg: 'bg-emerald-600', bgSoft: 'bg-emerald-50', text: 'text-emerald-600', hoverBg: 'hover:bg-emerald-700', shadow: 'shadow-[0_8px_20px_-6px_rgba(5,150,105,0.5)]' } :
+                             { bg: 'bg-purple-600', bgSoft: 'bg-purple-50', text: 'text-purple-600', hoverBg: 'hover:bg-purple-700', shadow: 'shadow-[0_8px_20px_-6px_rgba(147,51,234,0.5)]' };
+
+              return (
               <div 
                 key={i} 
-                className={`bg-white rounded-2xl p-8 shadow-lg border-t-4 ${
-                  stakeholder.color === 'blue' ? 'border-blue-500' :
-                  stakeholder.color === 'green' ? 'border-green-500' : 'border-purple-500'
-                } hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-out`}
+                className="group relative bg-[#FBFBFD] rounded-[2.5rem] p-8 lg:p-10 transition-all duration-500 hover:bg-white hover:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.1)] border border-transparent hover:border-gray-100 flex flex-col h-full overflow-hidden"
               >
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 ${
-                  stakeholder.color === 'blue' ? 'bg-blue-100 text-blue-600' :
-                  stakeholder.color === 'green' ? 'bg-green-100 text-green-600' : 'bg-purple-100 text-purple-600'
-                }`}>
-                  {stakeholder.icon}
+                {/* Massive Decorative Icon Background */}
+                <div className={`absolute top-0 right-0 w-64 h-64 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-10 transition-all duration-700 ${colorObj.bg} blur-3xl pointer-events-none`}></div>
+                
+                <div className="relative z-10 flex-1 flex flex-col">
+                  <div className={`inline-flex items-center justify-center w-20 h-20 rounded-[1.5rem] mb-10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 ease-out bg-white border border-gray-100 ${colorObj.text}`}>
+                    {stakeholder.icon}
+                  </div>
+                  
+                  <h3 className="font-black text-gray-900 text-3xl mb-8 tracking-tight">{stakeholder.title}</h3>
+                  
+                  <ul className="space-y-5 mb-12 flex-1">
+                    {stakeholder.benefits.map((benefit, j) => (
+                      <li key={j} className="flex items-start gap-4">
+                        <div className={`mt-1 shrink-0 w-6 h-6 rounded-full ${colorObj.bgSoft} flex items-center justify-center ${colorObj.text}`}>
+                          <FiCheckCircle className="w-4 h-4" />
+                        </div>
+                        <span className="text-gray-600 font-medium leading-relaxed">{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 
-                <h3 className="font-bold text-gray-900 text-xl mb-4">{stakeholder.title}</h3>
-                
-                <ul className="space-y-3 mb-6">
-                  {stakeholder.benefits.map((benefit, j) => (
-                    <li key={j} className="flex items-start gap-2">
-                      <FiCheckCircle className={`h-5 w-5 mt-0.5 flex-shrink-0 ${
-                        stakeholder.color === 'blue' ? 'text-blue-500' :
-                        stakeholder.color === 'green' ? 'text-green-500' : 'text-purple-500'
-                      }`} />
-                      <span className="text-gray-600 text-sm">{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <Link
-                  to={stakeholder.link}
-                  className={`inline-flex items-center justify-center w-full px-6 py-3 rounded-xl font-semibold transition-all ${
-                    stakeholder.color === 'blue' ? 'bg-blue-600 hover:bg-blue-700 text-white' :
-                    stakeholder.color === 'green' ? 'bg-green-600 hover:bg-green-700 text-white' : 
-                    'bg-purple-600 hover:bg-purple-700 text-white'
-                  }`}
-                >
-                  {stakeholder.cta}
-                  <FiArrowRight className="ml-2 h-4 w-4" />
-                </Link>
+                <div className="mt-auto relative z-10">
+                  <Link
+                    to={stakeholder.link}
+                    className={`group/btn w-full inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold text-white transition-all duration-300 ${colorObj.bg} ${colorObj.hoverBg} hover:-translate-y-1 ${colorObj.shadow}`}
+                  >
+                    <span>{stakeholder.cta}</span>
+                    <FiArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
               </div>
-            ))}
+            )})}
           </StaggerReveal>
         </div>
       </div>
