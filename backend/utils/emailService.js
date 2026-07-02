@@ -1,6 +1,6 @@
-const { Resend } = require('resend');
+const sgMail = require('@sendgrid/mail');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const emailTemplates = require('./emailTemplates');
 
 function generateOTP() {
@@ -10,27 +10,26 @@ function generateOTP() {
 // Generic email sender
 async function sendEmail(to, subject, htmlContent) {
   try {
-    if (!process.env.RESEND_API_KEY) {
+    if (!process.env.SENDGRID_API_KEY) {
       console.log(`[DEV MODE] Email bypassed for ${to}. Subject: ${subject}`);
       return { success: true, message: 'Email bypassed in dev mode' };
     }
 
-    const { data, error } = await resend.emails.send({
-      from: 'DormWatch <onboarding@resend.dev>',
+    const msg = {
       to,
+      from: 'dormwatch247@gmail.com', // Must match the verified SendGrid sender
       subject,
       html: htmlContent
-    });
+    };
 
-    if (error) {
-      console.error('Email sending error:', error);
-      return { success: false, error: error.message };
-    }
-
-    console.log('Email sent:', data.id);
-    return { success: true, messageId: data.id };
+    const [response] = await sgMail.send(msg);
+    console.log('Email sent:', response.headers['x-message-id']);
+    return { success: true, messageId: response.headers['x-message-id'] };
   } catch (error) {
-    console.error('Email sending exception:', error);
+    console.error('Email sending error:', error);
+    if (error.response) {
+      console.error(error.response.body);
+    }
     return { success: false, error: error.message };
   }
 }
@@ -116,26 +115,25 @@ async function sendOTPEmail(to, otp, type) {
   `;
 
   try {
-    if (!process.env.RESEND_API_KEY) {
+    if (!process.env.SENDGRID_API_KEY) {
       console.log(`[DEV MODE] OTP for ${to} is: ${otp}`);
       return { success: true, message: 'Email bypassed in dev mode' };
     }
 
-    const { data, error } = await resend.emails.send({
-      from: 'DormWatch <onboarding@resend.dev>',
+    const msg = {
       to,
+      from: 'dormwatch247@gmail.com',
       subject,
       html
-    });
+    };
 
-    if (error) {
-      console.error('Email send error:', error);
-      return { success: false, message: error.message };
-    }
-
-    return { success: true, messageId: data.id };
+    const [response] = await sgMail.send(msg);
+    return { success: true, messageId: response.headers['x-message-id'] };
   } catch (error) {
     console.error('Email send exception:', error.message);
+    if (error.response) {
+      console.error(error.response.body);
+    }
     return { success: false, message: error.message };
   }
 }
