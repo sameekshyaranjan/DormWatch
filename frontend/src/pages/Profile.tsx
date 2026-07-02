@@ -365,25 +365,15 @@ export default function Profile() {
   );
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] pb-24 relative overflow-hidden font-sans">
-      {/* Ambient Background Glows */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-400/10 blur-[120px]" />
-        <div className="absolute top-[30%] -right-[10%] w-[40%] h-[60%] rounded-full bg-indigo-400/10 blur-[120px]" />
-        <div className="absolute -bottom-[20%] left-[20%] w-[60%] h-[50%] rounded-full bg-teal-400/10 blur-[120px]" />
-      </div>
-
-      <div className="relative z-10">
-      {/* Header - DYNAMIC GRADIENT BASED ON ROLE */}
-      <div className={`pt-16 pb-40 relative overflow-hidden ${isOwner ? 'bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900' : 'bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-900'}`}>
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div className="min-h-screen bg-[#FAFAFA] pb-24 font-sans text-slate-900">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 pt-16 pb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Top Navigation */}
           <div className="flex items-center justify-between mb-10">
             <Link 
               to={isOwner ? "/owner/dashboard" : "/dashboard"} 
-              className={`inline-flex items-center ${isOwner ? 'text-emerald-300 hover:text-white' : 'text-blue-300 hover:text-white'} font-bold transition-all gap-2`}
+              className="inline-flex items-center text-gray-500 hover:text-gray-900 font-semibold transition-colors gap-2 text-sm"
             >
               <FiArrowLeft /> Back to Dashboard
             </Link>
@@ -395,10 +385,10 @@ export default function Profile() {
                   e.stopPropagation();
                   setShowNotifications(!showNotifications);
                 }}
-                className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors relative"
+                className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors relative"
               >
-                <FiBell className="h-6 w-6 text-white" />
-                <span className={`absolute top-2 right-2 w-3 h-3 ${isOwner ? 'bg-emerald-500' : 'bg-red-500'} rounded-full border-2 ${isOwner ? 'border-emerald-900' : 'border-slate-900'} animate-pulse`}></span>
+                <FiBell className="h-5 w-5 text-gray-700" />
+                <span className={`absolute top-1 right-1 w-2.5 h-2.5 ${isOwner ? 'bg-emerald-500' : 'bg-blue-500'} rounded-full border-2 border-white`}></span>
               </button>
               
               {/* Notifications Dropdown */}
@@ -491,14 +481,13 @@ export default function Profile() {
           
           <div className="flex flex-col md:flex-row items-center gap-10">
             {/* Profile Photo */}
-            <div className="relative group perspective">
-              <div className="absolute inset-0 bg-gradient-to-tr from-blue-400 to-emerald-400 rounded-[2rem] blur-xl opacity-40 group-hover:opacity-70 transition-opacity duration-500"></div>
-              <div className={`relative w-28 h-28 sm:w-36 sm:h-36 rounded-[2rem] ${isOwner ? 'bg-gradient-to-br from-emerald-400 to-teal-600' : 'bg-gradient-to-br from-blue-400 to-indigo-600'} flex items-center justify-center text-4xl sm:text-5xl font-black text-white shadow-2xl ${isOwner ? 'shadow-emerald-900/50' : 'shadow-blue-900/50'} border-4 border-white/20 overflow-hidden transform transition-transform duration-500 group-hover:scale-105`}>
+            <div className="relative group">
+              <div className={`relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl ${isOwner ? 'bg-emerald-600' : 'bg-slate-900'} flex items-center justify-center text-4xl sm:text-5xl font-bold text-white shadow-sm overflow-hidden`}>
                 {profile?.profilePhoto ? (
                   <img 
                     src={profile.profilePhoto} 
                     alt={profile.name} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   profile?.name.charAt(0).toUpperCase()
@@ -515,10 +504,10 @@ export default function Profile() {
             
             <div className="text-center md:text-left">
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-3">
-                <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
                   {profile?.name}
                 </h1>
-                <span className={`${isOwner ? 'bg-emerald-600/30 border-emerald-400/30 text-emerald-200' : 'bg-blue-600/30 border-blue-400/30 text-blue-200'} backdrop-blur-md border px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-1`}>
+                <span className="bg-gray-100 border border-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
                   <FiShield className="h-3 w-3" />
                   {isOwner ? 'Property Owner' : profile?.role}
                 </span>
@@ -527,31 +516,29 @@ export default function Profile() {
                   <VerifiedBadge collegeName={profile.collegeName} size="md" />
                 )}
               </div>
-              <p className={`${isOwner ? 'text-emerald-200' : 'text-blue-200'} text-lg flex items-center justify-center md:justify-start gap-2 font-medium`}>
-                <FiMail className={isOwner ? 'text-emerald-400' : 'text-blue-400'} /> {profile?.email}
+              <p className="text-gray-500 text-sm flex items-center justify-center md:justify-start gap-2 font-medium">
+                <FiMail className="text-gray-400" /> {profile?.email}
               </p>
               {/* ✅ SHOW COLLEGE NAME IF VERIFIED */}
               {!isOwner && profile?.isCollegeVerified && profile?.collegeName && (
-                <p className="text-blue-300 text-sm flex items-center justify-center md:justify-start gap-2 font-medium mt-2">
-                  <FiMapPin className="text-blue-400" /> {profile.collegeName}
+                <p className="text-gray-500 text-sm flex items-center justify-center md:justify-start gap-2 font-medium mt-1">
+                  <FiMapPin className="text-gray-400" /> {profile.collegeName}
                 </p>
               )}
-              <div className="mt-6 flex flex-wrap justify-center md:justify-start gap-4">
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl flex items-center gap-2">
-                  <FiCalendar className={isOwner ? 'text-emerald-400' : 'text-blue-400'} />
-                  <span className="text-xs font-bold text-white uppercase tracking-widest">
+              <div className="mt-4 flex flex-wrap justify-center md:justify-start gap-3">
+                <div className="bg-gray-50 border border-gray-200 text-gray-600 px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs font-semibold">
+                  <FiCalendar className="text-gray-400" />
+                  <span>
                     Member since {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : '2024'}
                   </span>
                 </div>
                 {!isOwner && !profile?.isCollegeVerified && (
                   <button
                     onClick={() => setShowCollegeModal(true)}
-                    className="bg-blue-600/90 hover:bg-blue-600 backdrop-blur-md border border-blue-400/30 px-4 py-2 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-blue-900/20"
+                    className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg flex items-center gap-2 transition-colors text-xs font-semibold shadow-sm"
                   >
-                    <FiShield className="text-blue-200" />
-                    <span className="text-xs font-bold text-white uppercase tracking-widest">
-                      Verify College Email
-                    </span>
+                    <FiShield />
+                    <span>Verify College Email</span>
                   </button>
                 )}
               </div>
@@ -651,41 +638,41 @@ export default function Profile() {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         {/* Role-based Stats Grid */}
         {isOwner ? (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {[
               { label: 'Properties Managed', value: profile?.totalProperties || 0, icon: <FiHome />, color: 'text-emerald-600', bg: 'bg-emerald-50' },
               { label: 'Avg Trust Score', value: profile?.avgTrustScore || 0, icon: <FiTrendingUp />, color: 'text-blue-600', bg: 'bg-blue-50' },
               { label: 'Total Reports', value: profile?.totalReportsOnProperties || 0, icon: <FiFileText />, color: 'text-yellow-600', bg: 'bg-yellow-50' },
               { label: 'Resolution Rate', value: `${profile?.resolutionRate || 0}%`, icon: <FiCheckCircle />, color: 'text-green-600', bg: 'bg-green-50' }
             ].map((stat, i) => (
-              <div key={i} className="bg-white/70 backdrop-blur-xl rounded-[2rem] shadow-xl shadow-slate-200/50 p-8 border border-white flex items-center gap-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-300/60 group">
-                <div className={`w-16 h-16 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
+              <div key={i} className="bg-white border border-gray-200 p-5 rounded-xl flex items-center gap-4 transition-shadow hover:shadow-md">
+                <div className={`w-10 h-10 ${stat.bg} ${stat.color} rounded-lg flex items-center justify-center text-lg flex-shrink-0`}>
                   {stat.icon}
                 </div>
                 <div>
-                  <p className="text-3xl font-black text-slate-900 tracking-tight">{stat.value}</p>
-                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest mt-1">{stat.label}</p>
+                  <p className="text-2xl font-bold text-slate-900 tracking-tight">{stat.value}</p>
+                  <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mt-0.5">{stat.label}</p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             {[
               { label: 'Reports Filed', value: profile?.totalReports || 0, icon: <FiFileText />, color: 'text-blue-600', bg: 'bg-blue-50' },
               { label: 'Confirmations Received', value: profile?.totalUpvotes || 0, icon: <FiAward />, color: 'text-indigo-600', bg: 'bg-indigo-50' },
               { label: 'Issues Resolved', value: profile?.resolvedReports || 0, icon: <FiCheckCircle />, color: 'text-green-600', bg: 'bg-green-50' }
             ].map((stat, i) => (
-              <div key={i} className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-xl shadow-slate-200/40 p-8 border border-white flex items-center gap-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-300/50 group">
-                <div className={`w-16 h-16 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
+              <div key={i} className="bg-white border border-gray-200 p-5 rounded-xl flex items-center gap-4 transition-shadow hover:shadow-md">
+                <div className={`w-10 h-10 ${stat.bg} ${stat.color} rounded-lg flex items-center justify-center text-lg flex-shrink-0`}>
                   {stat.icon}
                 </div>
                 <div>
-                  <p className="text-3xl font-black text-slate-900 tracking-tight">{stat.value}</p>
-                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest mt-1">{stat.label}</p>
+                  <p className="text-2xl font-bold text-slate-900 tracking-tight">{stat.value}</p>
+                  <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mt-0.5">{stat.label}</p>
                 </div>
               </div>
             ))}
@@ -693,11 +680,11 @@ export default function Profile() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6">
             
             {/* Personal Information */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-white overflow-hidden">
-              <div className="p-8 border-b border-gray-100/50 flex items-center justify-between bg-gradient-to-r from-transparent to-white/50">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="p-6 border-b border-gray-200 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`p-2.5 ${isOwner ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600'} rounded-xl`}>
                     <FiUser className="h-5 w-5" />
@@ -714,40 +701,40 @@ export default function Profile() {
                 )}
               </div>
               
-              <div className="p-8 space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Full Display Name</label>
+                    <label className="text-xs font-semibold text-gray-600">Full Display Name</label>
                     {editingName ? (
                       <div className="flex gap-2">
                         <input 
                           type="text" 
-                          className="flex-grow px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all font-bold text-slate-700"
+                          className="flex-grow px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium text-slate-900"
                           value={newName}
                           onChange={(e) => setNewName(e.target.value)}
                         />
                         <button 
                           onClick={handleNameUpdate}
                           disabled={nameLoading}
-                          className={`p-3 ${isOwner ? 'bg-emerald-600 shadow-emerald-200' : 'bg-blue-600 shadow-blue-200'} text-white rounded-xl shadow-lg hover:opacity-90 disabled:opacity-50 transition-all`}
+                          className={`p-2 ${isOwner ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'} text-white rounded-lg transition-colors disabled:opacity-50`}
                         >
                           <FiCheck />
                         </button>
                         <button 
                           onClick={() => { setEditingName(false); setNewName(profile?.name || ''); }}
-                          className="p-3 bg-gray-100 text-slate-400 rounded-xl hover:bg-gray-200 transition-all"
+                          className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
                         >
                           <FiX />
                         </button>
                       </div>
                     ) : (
-                      <p className="px-4 py-3 bg-gray-50 rounded-xl font-bold text-slate-700 border border-transparent">{profile?.name}</p>
+                      <p className="px-3 py-2 bg-gray-50 rounded-lg font-medium text-slate-900 border border-gray-100">{profile?.name}</p>
                     )}
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Email Address</label>
-                    <div className="px-4 py-3 bg-gray-50 rounded-xl font-bold text-slate-400 border border-transparent flex items-center justify-between">
+                    <label className="text-xs font-semibold text-gray-600">Email Address</label>
+                    <div className="px-3 py-2 bg-gray-50 rounded-lg font-medium text-gray-500 border border-gray-100 flex items-center justify-between">
                       {profile?.email}
                       <FiLock className="h-3 w-3" />
                     </div>
@@ -756,14 +743,14 @@ export default function Profile() {
 
                 {/* ✅ SHOW COLLEGE VERIFICATION STATUS */}
                 {!isOwner && profile?.isCollegeVerified && (
-                  <div className="p-6 bg-blue-50 border border-blue-100 rounded-xl">
+                  <div className="p-4 bg-blue-50/50 border border-blue-100 rounded-lg">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <FiCheckCircle className="h-5 w-5 text-blue-600" />
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <FiCheckCircle className="h-4 w-4 text-blue-600" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-blue-900">Verified College Student</h4>
-                        <p className="text-sm text-blue-700 mt-1">
+                        <h4 className="font-semibold text-blue-900 text-sm">Verified College Student</h4>
+                        <p className="text-xs text-blue-700 mt-1">
                           {profile.collegeName || 'Educational institution'} • Your reports carry verified student status
                         </p>
                       </div>
@@ -774,57 +761,57 @@ export default function Profile() {
             </div>
 
             {/* Security Settings */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-white overflow-hidden">
-              <div className="p-8 border-b border-gray-100/50 flex items-center gap-3 bg-gradient-to-r from-transparent to-white/50">
-                <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="p-6 border-b border-gray-200 flex items-center gap-3">
+                <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
                   <FiLock className="h-5 w-5" />
                 </div>
                 <h2 className="text-xl font-bold text-slate-900">Security Settings</h2>
               </div>
               
-              <div className="p-8">
+              <div className="p-6">
                 {!showPasswordForm ? (
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 p-5 bg-gray-50 rounded-lg border border-gray-100">
                     <div>
-                      <h3 className="font-bold text-slate-900">Account Password</h3>
+                      <h3 className="font-semibold text-slate-900">Account Password</h3>
                       <p className="text-sm text-gray-500 mt-1">Change your password to keep your account secure.</p>
                     </div>
                     <button 
                       onClick={() => setShowPasswordForm(true)}
-                      className="bg-white hover:bg-gray-50 text-slate-900 px-6 py-3 rounded-xl font-bold border border-gray-200 transition-all shadow-sm whitespace-nowrap"
+                      className="bg-white hover:bg-gray-50 text-slate-900 px-4 py-2 rounded-lg font-semibold border border-gray-300 transition-colors shadow-sm whitespace-nowrap text-sm"
                     >
                       Update Password
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handlePasswordChange} className="max-w-md space-y-6">
+                  <form onSubmit={handlePasswordChange} className="max-w-md space-y-5">
                     <div className="space-y-4">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Current Password</label>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-gray-600">Current Password</label>
                         <input 
                           type="password" 
                           required
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none font-medium text-slate-700"
+                          className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none font-medium text-slate-900"
                           value={currentPassword}
                           onChange={(e) => setCurrentPassword(e.target.value)}
                         />
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">New Password</label>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-gray-600">New Password</label>
                         <input 
                           type="password" 
                           required
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none font-medium text-slate-700"
+                          className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none font-medium text-slate-900"
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
                         />
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Confirm New Password</label>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-gray-600">Confirm New Password</label>
                         <input 
                           type="password" 
                           required
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none font-medium text-slate-700"
+                          className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none font-medium text-slate-900"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                         />
@@ -832,7 +819,7 @@ export default function Profile() {
                     </div>
                     
                     {passwordMessage && (
-                      <div className={`p-4 rounded-xl ${passwordMessage.includes('success') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                      <div className={`p-3 rounded-lg ${passwordMessage.includes('success') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
                         <p className="text-sm font-bold flex items-center gap-2">
                           {passwordMessage.includes('success') ? <FiCheckCircle /> : <FiInfo />}
                           {passwordMessage}
@@ -844,7 +831,7 @@ export default function Profile() {
                       <button 
                         type="submit"
                         disabled={passwordLoading}
-                        className={`${isOwner ? 'bg-emerald-600 shadow-emerald-200' : 'bg-blue-600 shadow-blue-200'} text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:opacity-90 transition-all disabled:opacity-50`}
+                        className={`${isOwner ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-blue-600 hover:bg-blue-700'} text-white px-6 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50 text-sm`}
                       >
                         {passwordLoading ? 'Saving...' : 'Save Password'}
                       </button>
@@ -857,7 +844,7 @@ export default function Profile() {
                           setNewPassword('');
                           setConfirmPassword('');
                         }}
-                        className="px-8 py-3 bg-gray-100 text-slate-600 font-bold rounded-xl hover:bg-gray-200 transition-all"
+                        className="px-6 py-2 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors text-sm"
                       >
                         Cancel
                       </button>
@@ -868,24 +855,24 @@ export default function Profile() {
             </div>
 
             {isOwner && (
-              <div className="bg-gradient-to-br from-emerald-900 to-teal-900 text-white rounded-2xl shadow-lg p-8 border border-emerald-700/30">
-                <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+              <div className="bg-slate-900 text-white rounded-xl shadow-sm p-6 border border-slate-800">
+                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
                   <FiHome /> Quick Actions
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Link 
                     to="/owner/dashboard"
-                    className="p-4 bg-white/10 hover:bg-white/20 rounded-xl flex items-center gap-3 transition-all border border-white/10"
+                    className="p-3 bg-white/5 hover:bg-white/10 rounded-lg flex items-center gap-2 transition-colors border border-white/10 text-sm font-semibold"
                   >
-                    <FiBarChart2 className="h-6 w-6" />
-                    <span className="font-bold">View Dashboard</span>
+                    <FiBarChart2 className="h-5 w-5" />
+                    <span>View Dashboard</span>
                   </Link>
                   <Link 
                     to="/owner/add-property"
-                    className="p-4 bg-white/10 hover:bg-white/20 rounded-xl flex items-center gap-3 transition-all border border-white/10"
+                    className="p-3 bg-white/5 hover:bg-white/10 rounded-lg flex items-center gap-2 transition-colors border border-white/10 text-sm font-semibold"
                   >
-                    <FiPlus className="h-6 w-6" />
-                    <span className="font-bold">Add Property</span>
+                    <FiPlus className="h-5 w-5" />
+                    <span>Add Property</span>
                   </Link>
                 </div>
               </div>
@@ -893,20 +880,20 @@ export default function Profile() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             {/* Notification Preferences */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                   <FiBell className={isOwner ? 'text-emerald-600' : 'text-blue-600'} /> Notifications
                 </h3>
                 {prefsMessage && (
-                  <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                  <span className="text-xs font-semibold text-green-700 bg-green-50 px-2 py-1 rounded-full border border-green-200">
                     {prefsMessage}
                   </span>
                 )}
               </div>
-              <div className="space-y-6">
+              <div className="space-y-5">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-sm font-bold text-slate-900">
@@ -976,11 +963,11 @@ export default function Profile() {
             </div>
 
             {/* Danger Zone */}
-            <div className="bg-red-50 rounded-2xl p-8 border border-red-100">
-              <h3 className="text-lg font-bold text-red-900 mb-4 flex items-center gap-2">
+            <div className="bg-white rounded-xl shadow-sm border border-red-200 p-6">
+              <h3 className="text-lg font-bold text-red-600 mb-2 flex items-center gap-2">
                 <FiTrash2 className="h-5 w-5" /> Danger Zone
               </h3>
-              <p className="text-xs text-red-700/80 mb-8 leading-relaxed font-medium">
+              <p className="text-sm text-gray-500 mb-6">
                 Once you delete your account, there is no going back. All your {isOwner ? 'properties and resolution data' : 'safety contributions and data'} will be permanently removed.
               </p>
               <button 
@@ -989,15 +976,13 @@ export default function Profile() {
                     alert('Account deletion request received. Our team will contact you shortly.');
                   }
                 }}
-                className="w-full py-3 bg-white text-red-600 border border-red-200 rounded-xl font-bold text-sm hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                className="w-full py-2.5 bg-red-50 text-red-600 border border-red-100 rounded-lg font-semibold text-sm hover:bg-red-100 hover:border-red-200 transition-colors"
               >
                 Delete Account
               </button>
             </div>
           </div>
         </div>
-      </div>
-
       </div>
 
       <CollegeVerificationModal 
