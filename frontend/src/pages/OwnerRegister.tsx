@@ -300,14 +300,7 @@ export default function OwnerRegister() {
         <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
         
         <div className="relative z-10">
-          <Link to="/" className="inline-flex items-center gap-3 mb-20 group">
-            <div className="bg-white p-2 rounded-lg shadow-sm group-hover:scale-105 transition-transform">
-              <FiShield className="h-6 w-6 text-slate-950" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight text-white">
-              DormWatch
-            </span>
-          </Link>
+
 
           <h1 className="text-4xl xl:text-5xl font-semibold text-white mb-6 leading-[1.15] tracking-tight">
             Elevate your property's reputation.
@@ -356,15 +349,7 @@ export default function OwnerRegister() {
       {/* ─── Right Side: Form ──────────────────────────────────── */}
       <div className="w-full lg:w-[55%] flex flex-col justify-center px-6 py-12 sm:px-12 xl:px-24 bg-white overflow-y-auto">
         <div className="w-full max-w-xl mx-auto">
-          {/* Mobile Header (Hidden on Desktop) */}
-          <div className="lg:hidden flex items-center gap-3 mb-10">
-             <div className="bg-slate-950 p-2 rounded-lg">
-                <FiShield className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-2xl font-bold tracking-tight text-slate-950">
-                DormWatch
-              </span>
-          </div>
+
 
           <div className="mb-10">
             <h2 className="text-3xl font-semibold text-slate-900 tracking-tight mb-2">

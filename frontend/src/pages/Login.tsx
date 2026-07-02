@@ -59,14 +59,7 @@ export const Login: React.FC = () => {
         <div className="hidden lg:flex lg:w-1/2 bg-blue-600 p-12 text-white flex-col justify-between relative">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-indigo-700 opacity-90"></div>
           <div className="relative z-10">
-            <Link to="/" className="flex items-center space-x-2 group mb-12">
-              <div className="bg-gradient-to-br from-blue-100 to-white p-2 rounded-xl shadow-lg shadow-black/10 group-hover:scale-110 transition-transform duration-300">
-                <FiEye className="h-8 w-8 text-indigo-600" />
-              </div>
-              <span className="text-3xl font-black text-white tracking-tight">
-                DormWatch
-              </span>
-            </Link>
+
             
             <h2 className="text-4xl font-extrabold mb-6 leading-tight">
               Join the community of <span className="text-yellow-400">10,000+</span> students making safer choices.
