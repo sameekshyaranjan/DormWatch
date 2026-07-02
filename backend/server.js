@@ -2395,9 +2395,19 @@ async function startServer() {
     console.log("⚠️ MONGO_URI not found. Starting in-memory MongoDB for development...");
     try {
       const { MongoMemoryServer } = require("mongodb-memory-server");
-      const mongoServer = await MongoMemoryServer.create();
+      const fs = require("fs");
+      const path = require("path");
+      
+      const dbPath = path.join(__dirname, '.mongo-data');
+      if (!fs.existsSync(dbPath)) {
+        fs.mkdirSync(dbPath, { recursive: true });
+      }
+
+      const mongoServer = await MongoMemoryServer.create({
+        instance: { dbPath }
+      });
       mongoUri = mongoServer.getUri();
-      console.log(`✅ In-memory MongoDB started at ${mongoUri}`);
+      console.log(`✅ Persistent Local MongoDB started at ${mongoUri}`);
     } catch (err) {
       console.log("⚠️ Could not start mongodb-memory-server. Falling back to local MongoDB...");
       mongoUri = "mongodb://127.0.0.1:27017/dormwatch";
