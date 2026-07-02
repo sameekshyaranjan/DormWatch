@@ -117,7 +117,7 @@ async function sendOTPEmail(to, otp, type) {
 
   try {
     if (!process.env.RESEND_API_KEY) {
-      console.log(\`[DEV MODE] OTP for \${to} is: \${otp}\`);
+      console.log(`[DEV MODE] OTP for ${to} is: ${otp}`);
       return { success: true, message: 'Email bypassed in dev mode' };
     }
 
