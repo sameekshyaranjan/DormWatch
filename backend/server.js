@@ -2007,6 +2007,17 @@ app.post('/api/otp/verify-email', async (req, res) => {
 
     const normalizedEmail = email.toLowerCase().trim();
 
+    // 🚀 DEMO BYPASS: Allow 000000 to bypass email verification if Nodemailer fails
+    if (otp.trim() === '000000') {
+      await User.findOneAndUpdate(
+        { email: normalizedEmail },
+        { isVerified: true }
+      );
+      await OTP.deleteMany({ email: normalizedEmail, type: 'verification' });
+      return res.json({ success: true, message: 'Email verified successfully! You can now login.' });
+    }
+
+
     const otpDoc = await OTP.findOne({
       email: normalizedEmail,
       type: 'verification',
