@@ -299,10 +299,13 @@ export const Home: React.FC = () => {
               { icon: "💧", title: "Plumbing Issues", desc: "Irregular water supply and showers that never work when you need them" },
               { icon: "🔓", title: "Safety Risks", desc: "Useless locks, no working cameras, and zero security presence" }
             ].map((problem, i) => (
-              <div key={i} className="bg-red-50 border border-red-100 rounded-2xl p-6 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl transition-all duration-300 ease-out">
-                <div className="text-4xl mb-4">{problem.icon}</div>
-                <h3 className="font-bold text-gray-900 text-lg mb-2">{problem.title}</h3>
-                <p className="text-gray-600 text-sm">{problem.desc}</p>
+              <div key={i} className="group relative bg-white border border-gray-100 rounded-2xl p-6 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(239,68,68,0.15)] transition-all duration-300 ease-out overflow-hidden cursor-default">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 to-orange-400 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out"></div>
+                <div className="w-14 h-14 bg-red-50 border border-red-100 text-2xl flex items-center justify-center rounded-xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-sm">
+                  {problem.icon}
+                </div>
+                <h3 className="font-bold text-gray-900 text-lg mb-3">{problem.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{problem.desc}</p>
               </div>
             ))}
           </StaggerReveal>
