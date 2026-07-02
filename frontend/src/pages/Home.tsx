@@ -39,7 +39,6 @@ const AnimatedCounter: React.FC<{ end: number; suffix?: string; duration?: numbe
 export const Home: React.FC = () => {
   const { user } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
-  const [activeStakeholder, setActiveStakeholder] = useState(0);
 
   useEffect(() => {
     setIsVisible(true);
@@ -511,7 +510,7 @@ export const Home: React.FC = () => {
         <div className="absolute top-0 w-full h-40 bg-gradient-to-b from-[#050A15] to-transparent opacity-10"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-20">
             <FadeIn delay={0}>
               <span className="inline-block px-5 py-2 rounded-full bg-gray-100 text-gray-900 text-xs font-black tracking-widest uppercase mb-6 shadow-sm">
                 Built For Everyone
@@ -525,132 +524,51 @@ export const Home: React.FC = () => {
             </ScrollReveal>
           </div>
 
-          {/* Interactive Tabs */}
-          <div className="flex flex-col items-center">
-            <div className="inline-flex flex-wrap justify-center bg-gray-50 p-2 rounded-3xl border border-gray-100 shadow-sm mb-16 max-w-full">
-              {stakeholderBenefits.map((stakeholder, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveStakeholder(i)}
-                  className={`flex items-center space-x-3 px-6 py-4 rounded-2xl font-bold transition-all duration-300 ${
-                    activeStakeholder === i 
-                      ? 'bg-white shadow-[0_8px_30px_rgba(0,0,0,0.06)] text-gray-900 scale-105' 
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50'
-                  }`}
-                >
-                  <div className={`${
-                    activeStakeholder === i 
-                      ? stakeholder.color === 'blue' ? 'text-blue-600' : stakeholder.color === 'green' ? 'text-emerald-600' : 'text-purple-600'
-                      : 'text-gray-400'
-                  } transition-colors`}>
-                    <div className="w-5 h-5 [&>svg]:w-5 [&>svg]:h-5">
-                      {stakeholder.icon}
-                    </div>
-                  </div>
-                  <span>{stakeholder.title}</span>
-                </button>
-              ))}
-            </div>
-            
-            {/* Active Content Display */}
-            <div className="w-full max-w-6xl mx-auto relative min-h-[650px] lg:min-h-[500px]">
-              {stakeholderBenefits.map((stakeholder, i) => {
-                const isActive = activeStakeholder === i;
-                const colorObj = stakeholder.color === 'blue' ? { bg: 'bg-blue-600', bgSoft: 'bg-blue-50', text: 'text-blue-600', hoverBg: 'hover:bg-blue-700', shadow: 'shadow-[0_8px_20px_-6px_rgba(37,99,235,0.5)]', border: 'border-blue-200' } :
-                               stakeholder.color === 'green' ? { bg: 'bg-emerald-600', bgSoft: 'bg-emerald-50', text: 'text-emerald-600', hoverBg: 'hover:bg-emerald-700', shadow: 'shadow-[0_8px_20px_-6px_rgba(5,150,105,0.5)]', border: 'border-emerald-200' } :
-                               { bg: 'bg-purple-600', bgSoft: 'bg-purple-50', text: 'text-purple-600', hoverBg: 'hover:bg-purple-700', shadow: 'shadow-[0_8px_20px_-6px_rgba(147,51,234,0.5)]', border: 'border-purple-200' };
+          <StaggerReveal stagger={150} className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
+            {stakeholderBenefits.map((stakeholder, i) => {
+              const colorObj = stakeholder.color === 'blue' ? { bg: 'bg-blue-600', bgSoft: 'bg-blue-50', text: 'text-blue-600', hoverBg: 'hover:bg-blue-700', shadow: 'shadow-[0_8px_20px_-6px_rgba(37,99,235,0.5)]' } :
+                             stakeholder.color === 'green' ? { bg: 'bg-emerald-600', bgSoft: 'bg-emerald-50', text: 'text-emerald-600', hoverBg: 'hover:bg-emerald-700', shadow: 'shadow-[0_8px_20px_-6px_rgba(5,150,105,0.5)]' } :
+                             { bg: 'bg-purple-600', bgSoft: 'bg-purple-50', text: 'text-purple-600', hoverBg: 'hover:bg-purple-700', shadow: 'shadow-[0_8px_20px_-6px_rgba(147,51,234,0.5)]' };
 
-                return (
-                  <div 
-                    key={i} 
-                    className={`absolute inset-0 w-full transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                      isActive 
-                        ? 'opacity-100 translate-y-0 pointer-events-auto z-10' 
-                        : 'opacity-0 translate-y-12 pointer-events-none z-0'
-                    }`}
-                  >
-                    <div className="bg-[#FBFBFD] rounded-[3rem] p-10 lg:p-16 border border-gray-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] overflow-hidden relative group h-full">
-                      
-                      {/* Decorative Background Blob */}
-                      <div className={`absolute -right-32 -top-32 w-[30rem] h-[30rem] rounded-full ${colorObj.bg} opacity-[0.03] blur-[80px] pointer-events-none transition-transform duration-[2000ms] ${isActive ? 'scale-125' : 'scale-100'}`}></div>
-                      
-                      <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 relative z-10 items-center h-full">
-                        
-                        {/* Text Content */}
-                        <div>
-                          <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-8 shadow-sm bg-white border border-gray-100 ${colorObj.text} [&>svg]:w-8 [&>svg]:h-8`}>
-                            {stakeholder.icon}
-                          </div>
-                          <h3 className="text-3xl lg:text-4xl font-black text-gray-900 mb-8 tracking-tight leading-tight">
-                            {stakeholder.title}
-                          </h3>
-                          
-                          <ul className="space-y-6 mb-12">
-                            {stakeholder.benefits.map((benefit, j) => (
-                              <li 
-                                key={j} 
-                                className={`flex items-start gap-4 transition-all duration-700 ease-out delay-${j * 100} ${isActive ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                                style={{ transitionDelay: `${j * 100}ms` }}
-                              >
-                                <div className={`mt-1 shrink-0 w-8 h-8 rounded-full ${colorObj.bgSoft} flex items-center justify-center ${colorObj.text}`}>
-                                  <FiCheckCircle className="w-5 h-5" />
-                                </div>
-                                <span className="text-gray-600 text-lg font-medium leading-relaxed">{benefit}</span>
-                              </li>
-                            ))}
-                          </ul>
-                          
-                          <Link
-                            to={stakeholder.link}
-                            className={`inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-bold text-white transition-all duration-300 ${colorObj.bg} ${colorObj.hoverBg} hover:-translate-y-1 ${colorObj.shadow}`}
-                          >
-                            <span>{stakeholder.cta}</span>
-                            <FiArrowRight className="w-5 h-5" />
-                          </Link>
-                        </div>
-                        
-                        {/* Visual / Mock UI Element */}
-                        <div className="hidden lg:block relative h-full min-h-[400px]">
-                          <div className={`absolute inset-0 bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden transform translate-x-6 translate-y-6 opacity-40 transition-transform duration-1000 ${isActive ? 'translate-x-6 translate-y-6' : 'translate-x-12 translate-y-12'}`}></div>
-                          <div className={`absolute inset-0 bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col p-8 transition-transform duration-1000 ease-out hover:-translate-y-2 ${isActive ? 'translate-x-0 translate-y-0' : 'translate-x-6 translate-y-6'}`}>
-                            {/* Generic abstract visual layout */}
-                            <div className="w-full flex items-center justify-between mb-8 pb-6 border-b border-gray-100">
-                              <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-full ${colorObj.bgSoft} flex items-center justify-center ${colorObj.text} [&>svg]:w-6 [&>svg]:h-6`}>
-                                  {stakeholder.icon}
-                                </div>
-                                <div>
-                                  <div className="w-24 h-2 bg-gray-200 rounded-full mb-2"></div>
-                                  <div className="w-16 h-2 bg-gray-100 rounded-full"></div>
-                                </div>
-                              </div>
-                              <div className={`w-20 h-8 rounded-full ${colorObj.bg} opacity-10`}></div>
-                            </div>
-                            
-                            <div className="space-y-4">
-                              {[...Array(3)].map((_, idx) => (
-                                <div key={idx} className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100">
-                                  <div className="w-10 h-10 rounded-xl bg-white border border-gray-200 shrink-0"></div>
-                                  <div className="flex-1">
-                                    <div className="w-full max-w-[200px] h-2 bg-gray-200 rounded-full mb-2"></div>
-                                    <div className="w-3/4 max-w-[150px] h-2 bg-gray-100 rounded-full"></div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                            
-                            <div className={`mt-auto w-full h-16 rounded-2xl ${colorObj.bgSoft} border border-dashed ${colorObj.border} flex items-center justify-center`}>
-                              <div className={`w-1/3 h-2 rounded-full ${colorObj.bg} opacity-30`}></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+              return (
+              <div 
+                key={i} 
+                className="group relative bg-[#FBFBFD] rounded-[2.5rem] p-8 lg:p-10 transition-all duration-500 hover:bg-white hover:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.1)] border border-transparent hover:border-gray-100 flex flex-col h-full overflow-hidden"
+              >
+                {/* Massive Decorative Icon Background */}
+                <div className={`absolute top-0 right-0 w-64 h-64 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-10 transition-all duration-700 ${colorObj.bg} blur-3xl pointer-events-none`}></div>
+                
+                <div className="relative z-10 flex-1 flex flex-col">
+                  <div className={`inline-flex items-center justify-center w-20 h-20 rounded-[1.5rem] mb-10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 ease-out bg-white border border-gray-100 ${colorObj.text}`}>
+                    {stakeholder.icon}
                   </div>
-                );
-              })}
-            </div>
-          </div>
+                  
+                  <h3 className="font-black text-gray-900 text-3xl mb-8 tracking-tight">{stakeholder.title}</h3>
+                  
+                  <ul className="space-y-5 mb-12 flex-1">
+                    {stakeholder.benefits.map((benefit, j) => (
+                      <li key={j} className="flex items-start gap-4">
+                        <div className={`mt-1 shrink-0 w-6 h-6 rounded-full ${colorObj.bgSoft} flex items-center justify-center ${colorObj.text}`}>
+                          <FiCheckCircle className="w-4 h-4" />
+                        </div>
+                        <span className="text-gray-600 font-medium leading-relaxed">{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div className="mt-auto relative z-10">
+                  <Link
+                    to={stakeholder.link}
+                    className={`group/btn w-full inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold text-white transition-all duration-300 ${colorObj.bg} ${colorObj.hoverBg} hover:-translate-y-1 ${colorObj.shadow}`}
+                  >
+                    <span>{stakeholder.cta}</span>
+                    <FiArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
+              </div>
+            )})}
+          </StaggerReveal>
         </div>
       </div>
 
