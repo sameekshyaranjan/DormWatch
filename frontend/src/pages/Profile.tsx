@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { VerifiedBadge } from '../components/VerifiedBadge';  // ✅ ADDED
+import { VerifiedBadge } from '../components/VerifiedBadge';
+import { CollegeVerificationModal } from '../components/CollegeVerificationModal';
 import { 
   FiUser, FiMail, FiCalendar, FiShield, FiStar, FiAward, 
   FiEdit2, FiLock, FiTrash2, FiArrowLeft, FiCheckCircle, FiInfo,
@@ -65,6 +66,7 @@ export default function Profile() {
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showCollegeModal, setShowCollegeModal] = useState(false);
 
   const navigate = useNavigate();
   const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -525,6 +527,17 @@ export default function Profile() {
                     Member since {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : '2024'}
                   </span>
                 </div>
+                {!isOwner && !profile?.isCollegeVerified && (
+                  <button
+                    onClick={() => setShowCollegeModal(true)}
+                    className="bg-blue-600/90 hover:bg-blue-600 backdrop-blur-md border border-blue-400/30 px-4 py-2 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-blue-900/20"
+                  >
+                    <FiShield className="text-blue-200" />
+                    <span className="text-xs font-bold text-white uppercase tracking-widest">
+                      Verify College Email
+                    </span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -967,7 +980,13 @@ export default function Profile() {
             </div>
           </div>
         </div>
-      </div>
+      )}
+
+      <CollegeVerificationModal 
+        isOpen={showCollegeModal} 
+        onClose={() => setShowCollegeModal(false)} 
+        onSuccess={() => fetchProfile()} 
+      />
     </div>
   );
 }
