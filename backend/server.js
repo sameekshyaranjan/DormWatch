@@ -2254,7 +2254,7 @@ app.get('/api/accommodations', async (req, res) => {
     }
 
     const accommodations = await Accommodation.find(query)
-      .select('_id name address city description amenities totalRooms occupiedRooms pricePerMonth contactPhone type latitude longitude trustScore trustScoreLabel trustScoreColor totalReports isVerified riskScore createdAt')
+      .select('_id name address city description amenities totalRooms occupiedRooms pricePerMonth contactPhone images type latitude longitude trustScore trustScoreLabel trustScoreColor totalReports isVerified riskScore createdAt')
       .sort({ trustScore: 1, createdAt: -1 })
       .lean();
 
