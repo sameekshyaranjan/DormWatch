@@ -980,7 +980,7 @@ export default function Profile() {
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       <CollegeVerificationModal 
         isOpen={showCollegeModal} 
