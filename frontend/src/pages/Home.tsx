@@ -635,50 +635,50 @@ export const Home: React.FC = () => {
       </div>
 
       {/* ================= FINAL CTA SECTION ================= */}
-      <div className="py-16 lg:py-24 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
-        </div>
-
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="py-24 lg:py-32 bg-[#030712] relative overflow-hidden">
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <ScrollReveal delay={0}>
-            <h2 className="text-3xl lg:text-5xl font-bold text-white mb-6">
-              Don't Let Your Next Home
-              <span className="block text-yellow-300">Become a Nightmare</span>
-            </h2>
-          </ScrollReveal>
-          
-          <ScrollReveal delay={100}>
-            <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
-              Join 10,000+ students who made informed decisions. Your safety is too important to leave to chance.
-            </p>
-          </ScrollReveal>
+            <div className="relative rounded-[3rem] overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-12 lg:p-20 text-center shadow-[0_0_80px_rgba(79,70,229,0.3)] border border-white/10">
+              
+              {/* Abstract Glass shapes */}
+              <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-white opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+              <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-black opacity-20 rounded-full blur-3xl pointer-events-none"></div>
+              
+              <div className="relative z-10 max-w-3xl mx-auto">
+                <h2 className="text-4xl lg:text-6xl font-black text-white mb-6 tracking-tight leading-tight">
+                  Rent with absolute <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">confidence.</span>
+                </h2>
+                
+                <p className="text-xl lg:text-2xl text-blue-100 mb-12 font-medium">
+                  Join thousands of students making smarter, safer housing choices every day.
+                </p>
 
-          <ScrollReveal delay={200}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/accommodations"
-                className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-xl text-indigo-700 bg-white hover:bg-gray-100 transform hover:scale-105 active:scale-95 transition-all duration-200 shadow-xl"
-              >
-                <FiSearch className="mr-2 h-5 w-5" />
-                Search Safe Accommodations
-              </Link>
-              <Link
-                to="/register"
-                className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-xl text-white border-2 border-white/50 hover:bg-white/10 active:scale-95 transition-all duration-200"
-              >
-                <FiAlertTriangle className="mr-2 h-5 w-5" />
-                Report a Safety Issue
-              </Link>
+                <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
+                  <Link
+                    to="/accommodations"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-10 py-5 text-lg font-bold rounded-2xl text-indigo-700 bg-white hover:bg-gray-50 transform hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)]"
+                  >
+                    <FiSearch className="mr-3 h-6 w-6" />
+                    Search Accommodations
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-10 py-5 text-lg font-bold rounded-2xl text-white bg-white/10 hover:bg-white/20 border border-white/20 transform hover:scale-105 active:scale-95 transition-all duration-300 backdrop-blur-md"
+                  >
+                    <FiAlertTriangle className="mr-3 h-6 w-6 text-yellow-300" />
+                    Report an Issue
+                  </Link>
+                </div>
+                
+                <div className="mt-12 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm font-semibold text-blue-200/80 uppercase tracking-widest">
+                  <span className="flex items-center gap-2"><FiCheckCircle className="w-4 h-4 text-emerald-400" /> Always Free</span>
+                  <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-blue-300/50"></span>
+                  <span className="flex items-center gap-2"><FiCheckCircle className="w-4 h-4 text-emerald-400" /> 100% Verified</span>
+                </div>
+              </div>
             </div>
           </ScrollReveal>
-
-          <FadeIn delay={300}>
-            <p className="text-blue-200 mt-8 text-sm">
-              100% Free • No Hidden Charges • Verified Reports Only
-            </p>
-          </FadeIn>
         </div>
       </div>
 
