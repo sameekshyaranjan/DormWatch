@@ -395,40 +395,70 @@ export const Home: React.FC = () => {
       </div>
 
       {/* ================= FEATURES SECTION ================= */}
-      <div className="py-16 lg:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+      <div className="py-20 lg:py-32 bg-gray-50 relative overflow-hidden">
+        {/* Ambient background orbs */}
+        <div className="absolute top-0 right-0 -mr-64 -mt-64 w-[40rem] h-[40rem] bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-40 animate-pulse"></div>
+        <div className="absolute bottom-0 left-0 -ml-64 -mb-64 w-[40rem] h-[40rem] bg-gradient-to-tr from-emerald-200 to-blue-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-40 animate-pulse" style={{ animationDelay: '2s' }}></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-20">
             <FadeIn delay={0}>
-              <span className="inline-block px-4 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold mb-4">
-                POWERFUL FEATURES
+              <span className="inline-block px-4 py-1.5 rounded-full bg-white text-gray-800 text-sm font-bold tracking-widest uppercase mb-6 shadow-sm border border-gray-200">
+                Platform Capabilities
               </span>
             </FadeIn>
             <ScrollReveal delay={100}>
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Everything You Need for <span className="text-green-600">Safe Decisions</span>
+              <h2 className="text-4xl lg:text-6xl font-extrabold text-gray-900 mb-6 tracking-tight">
+                Everything You Need for <br className="hidden sm:block" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Safe Decisions</span>
               </h2>
             </ScrollReveal>
           </div>
 
-          <StaggerReveal stagger={120} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {features.map((feature, i) => (
-              <div 
-                key={i} 
-                className="group relative bg-white rounded-2xl p-8 border border-gray-200 hover:border-transparent hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-out overflow-hidden"
-              >
-                {/* Gradient Background on Hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
-                
-                <div className="relative z-10">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} text-white mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    {feature.icon}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            {features.map((feature, i) => {
+              // Asymmetrical Bento Layout: row 1 (2, 1), row 2 (1, 2)
+              const isWide = i === 0 || i === 3;
+              
+              return (
+                <ScrollReveal 
+                  key={i} 
+                  delay={i * 100} 
+                  className={`${isWide ? 'md:col-span-2' : 'md:col-span-1'} group`}
+                >
+                  <div className="relative h-full bg-white rounded-[2rem] p-8 lg:p-10 border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 ease-out overflow-hidden flex flex-col justify-between z-10">
+                    
+                    {/* Ambient glow inside card on hover */}
+                    <div className={`absolute -bottom-32 -right-32 w-80 h-80 bg-gradient-to-br ${feature.color} rounded-full blur-[80px] opacity-0 group-hover:opacity-15 transition-opacity duration-700 z-0 pointer-events-none`}></div>
+                    
+                    <div className="relative z-10">
+                      <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} text-white mb-8 shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
+                        {feature.icon}
+                      </div>
+                      <h3 className={`font-bold text-gray-900 mb-4 ${isWide ? 'text-2xl lg:text-3xl' : 'text-2xl'}`}>
+                        {feature.title}
+                      </h3>
+                      <p className="text-gray-600 text-lg leading-relaxed max-w-lg">
+                        {feature.description}
+                      </p>
+                    </div>
+                    
+                    {/* Decorative abstract UI element for wide cards */}
+                    {isWide && (
+                      <div className="relative mt-10 h-20 w-full bg-gray-50/50 rounded-2xl border border-gray-100 overflow-hidden z-10 group-hover:border-blue-100 transition-colors duration-500 flex items-center px-6">
+                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out opacity-50"></div>
+                         <div className="flex items-center space-x-3 opacity-40 group-hover:opacity-100 transition-opacity duration-500">
+                           <div className={`h-4 w-4 rounded-full bg-gradient-to-br ${feature.color}`}></div>
+                           <div className="h-2.5 w-32 bg-gray-200 rounded-full"></div>
+                           <div className="hidden sm:block h-2.5 w-16 bg-gray-200 rounded-full"></div>
+                         </div>
+                      </div>
+                    )}
                   </div>
-                  <h3 className="font-bold text-gray-900 text-xl mb-3">{feature.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-                </div>
-              </div>
-            ))}
-          </StaggerReveal>
+                </ScrollReveal>
+              );
+            })}
+          </div>
         </div>
       </div>
 
