@@ -55,26 +55,26 @@ export const Home: React.FC = () => {
     {
       step: "1",
       icon: <FiSearch className="h-8 w-8" />,
-      title: "Search Location",
-      description: "Find accommodations near your college with our interactive safety map"
+      title: "Explore",
+      description: "Browse accommodations near your college using our interactive map."
     },
     {
       step: "2",
       icon: <FiShield className="h-8 w-8" />,
-      title: "Check Trust Score",
-      description: "View verified safety ratings from 0-100 based on real student reports"
+      title: "Investigate",
+      description: "Check the Trust Score—our definitive metric for property safety and hygiene."
     },
     {
       step: "3",
       icon: <FiFileText className="h-8 w-8" />,
-      title: "Read Reports",
-      description: "Access detailed safety reports with evidence from verified residents"
+      title: "Uncover",
+      description: "Dive into detailed reports and visual evidence from verified students."
     },
     {
       step: "4",
       icon: <FiCheckCircle className="h-8 w-8" />,
-      title: "Decide Safely",
-      description: "Make informed decisions backed by data, not fake reviews"
+      title: "Decide",
+      description: "Make a data-backed decision without falling for broker marketing."
     }
   ];
 
@@ -342,7 +342,7 @@ export const Home: React.FC = () => {
             </FadeIn>
             <ScrollReveal delay={100}>
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Find Safe Accommodation in <span className="text-blue-600">4 Simple Steps</span>
+                How to <span className="text-blue-600">Avoid the Housing Trap</span>
               </h2>
             </ScrollReveal>
           </div>
