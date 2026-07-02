@@ -135,10 +135,10 @@ export const Home: React.FC = () => {
       icon: <FiUsers className="h-12 w-12" />,
       title: "For Students",
       benefits: [
-        "Report issues anonymously but verifiably",
-        "Search safe accommodations near any location",
-        "See real photos and evidence, not stock images",
-        "Verify if owners actually fix problems"
+        "Speak up without fear using our verified anonymous reporting.",
+        "Find top-rated, safe housing right next to your campus.",
+        "Avoid the \"catfish\" trap with 100% real photo evidence.",
+        "Hold landlords entirely accountable for broken promises."
       ],
       color: "blue",
       cta: "Report an Issue",
@@ -148,10 +148,10 @@ export const Home: React.FC = () => {
       icon: <FiHome className="h-12 w-12" />,
       title: "For Parents",
       benefits: [
-        "Verify safety before your child moves in",
-        "Compare accommodations side-by-side",
-        "Track safety scores over time",
-        "Real reports from real students"
+        "Ensure your child's living conditions meet your exact standards.",
+        "Skip the guesswork with direct side-by-side property comparisons.",
+        "Get alerted to declining safety trends before they become emergencies.",
+        "Rely on transparent, unmanipulated student experiences."
       ],
       color: "green",
       cta: "Search Accommodations",
@@ -161,10 +161,10 @@ export const Home: React.FC = () => {
       icon: <FiAward className="h-12 w-12" />,
       title: "For Good Owners",
       benefits: [
-        "Build genuine reputation with verified reviews",
-        "Respond to concerns and show improvements",
-        "Stand out from low-quality competitors",
-        "Attract safety-conscious tenants"
+        "Turn your prompt maintenance into a competitive advantage.",
+        "Defend your reputation by officially documenting issue resolutions.",
+        "Separate your property from the bad actors in your area.",
+        "Maximize occupancy by proving you care about tenant safety."
       ],
       color: "purple",
       cta: "Register Property",
