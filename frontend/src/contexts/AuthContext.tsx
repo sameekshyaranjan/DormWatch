@@ -17,7 +17,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  let API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  if (API.endsWith('/api')) API = API.slice(0, -4);
+  if (API.endsWith('/api/')) API = API.slice(0, -5);
   
   const [token, setToken] = useState<string | null>(() => {
     return localStorage.getItem('token');
