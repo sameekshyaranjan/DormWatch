@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { 
   FiShield, FiAlertTriangle, FiMap, FiFileText, FiUser, FiHome,
   FiCheckCircle, FiUsers, FiTrendingUp, FiSearch, FiStar, FiAward,
-  FiMapPin, FiCamera, FiMessageCircle, FiArrowRight, FiPlay
+  FiMapPin, FiCamera, FiMessageCircle, FiArrowRight, FiPlay, FiActivity, FiImage, FiUserCheck
 } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import { 
@@ -80,28 +80,32 @@ export const Home: React.FC = () => {
 
   const features = [
     {
-      icon: <FiMap className="h-10 w-10" />,
+      icon: <FiMapPin className="h-7 w-7" />,
       title: "Neighborhood Safety Map",
       description: "Check if a PG or hostel is in a safe zone before you even visit.",
-      color: "from-green-500 to-emerald-600"
+      color: "from-emerald-500 to-green-600",
+      textColor: "text-emerald-400"
     },
     {
-      icon: <FiShield className="h-10 w-10" />,
+      icon: <FiActivity className="h-7 w-7" />,
       title: "Data-Driven Scores",
       description: "Compare properties easily with our simple 0-100 trust rating system.",
-      color: "from-blue-500 to-indigo-600"
+      color: "from-blue-500 to-indigo-600",
+      textColor: "text-blue-400"
     },
     {
-      icon: <FiCamera className="h-10 w-10" />,
+      icon: <FiImage className="h-7 w-7" />,
       title: "Verified Proof",
       description: "Look at real photos uploaded by students to see the actual living conditions.",
-      color: "from-purple-500 to-violet-600"
+      color: "from-purple-500 to-fuchsia-600",
+      textColor: "text-purple-400"
     },
     {
-      icon: <FiMessageCircle className="h-10 w-10" />,
+      icon: <FiUserCheck className="h-7 w-7" />,
       title: "Owner Accountability",
       description: "Owners have to prove they fixed an issue before it gets marked as resolved.",
-      color: "from-orange-500 to-red-600"
+      color: "from-orange-500 to-red-600",
+      textColor: "text-orange-400"
     }
   ];
 
@@ -395,70 +399,46 @@ export const Home: React.FC = () => {
       </div>
 
       {/* ================= FEATURES SECTION ================= */}
-      <div className="py-20 lg:py-32 bg-gray-50 relative overflow-hidden">
-        {/* Ambient background orbs */}
-        <div className="absolute top-0 right-0 -mr-64 -mt-64 w-[40rem] h-[40rem] bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-40 animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 -ml-64 -mb-64 w-[40rem] h-[40rem] bg-gradient-to-tr from-emerald-200 to-blue-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-40 animate-pulse" style={{ animationDelay: '2s' }}></div>
-
+      <div className="py-24 lg:py-32 bg-[#0A0F1C] relative overflow-hidden">
+        {/* Subtle glowing lines in background */}
+        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-500/20 to-transparent"></div>
+        <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-indigo-500/20 to-transparent"></div>
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
             <FadeIn delay={0}>
-              <span className="inline-block px-4 py-1.5 rounded-full bg-white text-gray-800 text-sm font-bold tracking-widest uppercase mb-6 shadow-sm border border-gray-200">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-semibold tracking-wider uppercase mb-6">
                 Platform Capabilities
               </span>
             </FadeIn>
             <ScrollReveal delay={100}>
-              <h2 className="text-4xl lg:text-6xl font-extrabold text-gray-900 mb-6 tracking-tight">
-                Everything You Need for <br className="hidden sm:block" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Safe Decisions</span>
+              <h2 className="text-4xl lg:text-5xl font-extrabold text-white mb-6 tracking-tight">
+                Everything You Need for <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Safe Decisions</span>
               </h2>
             </ScrollReveal>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {features.map((feature, i) => {
-              // Asymmetrical Bento Layout: row 1 (2, 1), row 2 (1, 2)
-              const isWide = i === 0 || i === 3;
-              
-              return (
-                <ScrollReveal 
-                  key={i} 
-                  delay={i * 100} 
-                  className={`${isWide ? 'md:col-span-2' : 'md:col-span-1'} group`}
-                >
-                  <div className="relative h-full bg-white rounded-[2rem] p-8 lg:p-10 border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 ease-out overflow-hidden flex flex-col justify-between z-10">
-                    
-                    {/* Ambient glow inside card on hover */}
-                    <div className={`absolute -bottom-32 -right-32 w-80 h-80 bg-gradient-to-br ${feature.color} rounded-full blur-[80px] opacity-0 group-hover:opacity-15 transition-opacity duration-700 z-0 pointer-events-none`}></div>
-                    
-                    <div className="relative z-10">
-                      <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} text-white mb-8 shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
-                        {feature.icon}
-                      </div>
-                      <h3 className={`font-bold text-gray-900 mb-4 ${isWide ? 'text-2xl lg:text-3xl' : 'text-2xl'}`}>
-                        {feature.title}
-                      </h3>
-                      <p className="text-gray-600 text-lg leading-relaxed max-w-lg">
-                        {feature.description}
-                      </p>
-                    </div>
-                    
-                    {/* Decorative abstract UI element for wide cards */}
-                    {isWide && (
-                      <div className="relative mt-10 h-20 w-full bg-gray-50/50 rounded-2xl border border-gray-100 overflow-hidden z-10 group-hover:border-blue-100 transition-colors duration-500 flex items-center px-6">
-                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out opacity-50"></div>
-                         <div className="flex items-center space-x-3 opacity-40 group-hover:opacity-100 transition-opacity duration-500">
-                           <div className={`h-4 w-4 rounded-full bg-gradient-to-br ${feature.color}`}></div>
-                           <div className="h-2.5 w-32 bg-gray-200 rounded-full"></div>
-                           <div className="hidden sm:block h-2.5 w-16 bg-gray-200 rounded-full"></div>
-                         </div>
-                      </div>
-                    )}
+          <StaggerReveal stagger={100} className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
+            {features.map((feature, i) => (
+              <div 
+                key={i} 
+                className="group relative rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] p-8 lg:p-10 hover:bg-white/[0.04] transition-all duration-500 overflow-hidden"
+              >
+                {/* Hover gradient sweep */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-[0.07] transition-opacity duration-500`}></div>
+                
+                <div className="relative z-10 flex flex-col sm:flex-row items-start gap-6">
+                  <div className={`shrink-0 inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/5 ${feature.textColor} group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 border border-white/10 shadow-lg`}>
+                    {feature.icon}
                   </div>
-                </ScrollReveal>
-              );
-            })}
-          </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-3">{feature.title}</h3>
+                    <p className="text-gray-400 text-lg leading-relaxed">{feature.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </StaggerReveal>
         </div>
       </div>
 
