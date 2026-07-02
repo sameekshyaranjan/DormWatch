@@ -81,26 +81,26 @@ export const Home: React.FC = () => {
   const features = [
     {
       icon: <FiMap className="h-10 w-10" />,
-      title: "Interactive Safety Map",
-      description: "Search any location and instantly see safe (🟢), caution (🟡), and unsafe (🔴) accommodations within your preferred radius.",
+      title: "Neighborhood Safety Map",
+      description: "Check if a PG or hostel is in a safe zone before you even visit.",
       color: "from-green-500 to-emerald-600"
     },
     {
       icon: <FiShield className="h-10 w-10" />,
-      title: "Dynamic Trust Scores",
-      description: "Our algorithm calculates real-time safety scores (0-100) based on verified reports, resolutions, and student feedback.",
+      title: "Data-Driven Scores",
+      description: "Compare properties easily with our simple 0-100 trust rating system.",
       color: "from-blue-500 to-indigo-600"
     },
     {
       icon: <FiCamera className="h-10 w-10" />,
-      title: "Evidence-Based Reports",
-      description: "Students upload photos and documents as proof. No more 'he said, she said' – only verified evidence.",
+      title: "Verified Proof",
+      description: "Look at real photos uploaded by students to see the actual living conditions.",
       color: "from-purple-500 to-violet-600"
     },
     {
       icon: <FiMessageCircle className="h-10 w-10" />,
-      title: "Resolution Tracking",
-      description: "Owners must resolve issues with proof. Students verify fixes. Complete accountability loop.",
+      title: "Owner Accountability",
+      description: "Owners have to prove they fixed an issue before it gets marked as resolved.",
       color: "from-orange-500 to-red-600"
     }
   ];
