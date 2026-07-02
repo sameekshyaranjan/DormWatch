@@ -350,36 +350,33 @@ export const Home: React.FC = () => {
             </ScrollReveal>
           </div>
 
-          <div className="mt-12 max-w-4xl mx-auto space-y-6">
+          <StaggerReveal stagger={120} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mt-12">
             {howItWorks.map((step, i) => (
-              <StaggerReveal key={i} stagger={100} delay={i * 100}>
-                <div className="group flex flex-col sm:flex-row items-center sm:items-start gap-6 bg-white rounded-3xl p-6 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-16 -mt-16 transition-transform duration-500 group-hover:scale-150 opacity-50 z-0"></div>
-                  
-                  <div className="flex-shrink-0 relative z-10">
-                    <div className="absolute inset-0 bg-blue-400 rounded-2xl blur-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                    <div className="relative w-20 h-20 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+              <div key={i} className="group relative">
+                {/* Connector Line */}
+                {i < howItWorks.length - 1 && (
+                  <div className="hidden lg:block absolute top-12 left-[60%] w-full h-0 border-t-2 border-dashed border-blue-200 z-0 opacity-50"></div>
+                )}
+                
+                <div className="relative z-10 flex flex-col items-center text-center">
+                  {/* Outer circle with glow */}
+                  <div className="relative w-24 h-24 rounded-full bg-white shadow-xl shadow-blue-100/50 flex items-center justify-center mb-6 group-hover:-translate-y-2 transition-transform duration-300 border border-blue-50">
+                    {/* Inner circle with icon */}
+                    <div className="absolute inset-2 rounded-full bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform duration-300">
                       {step.icon}
-                      <div className="absolute -bottom-3 -right-3 w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center border-4 border-white shadow-sm">
-                        {step.step}
-                      </div>
+                    </div>
+                    {/* Floating Step Number */}
+                    <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center shadow-lg border-2 border-white">
+                      {step.step}
                     </div>
                   </div>
                   
-                  <div className="flex-1 text-center sm:text-left z-10 pt-2">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{step.title}</h3>
-                    <p className="text-gray-600 text-lg leading-relaxed">{step.description}</p>
-                  </div>
-                  
-                  <div className="hidden sm:flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-300 self-center z-10">
-                    <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                      <FiArrowRight className="w-6 h-6" />
-                    </div>
-                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">{step.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed max-w-xs">{step.description}</p>
                 </div>
-              </StaggerReveal>
+              </div>
             ))}
-          </div>
+          </StaggerReveal>
 
           {/* CTA */}
           <ScrollReveal delay={0}>
