@@ -2387,21 +2387,42 @@ app.use((err, req, res, next) => {
 // START SERVER
 // ============================================================
 
-const PORT = process.env.PORT || 5000;
+async function startServer() {
+  const PORT = process.env.PORT || 5000;
+  let mongoUri = process.env.MONGO_URI;
 
-mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/dormwatch")
-  .then(() => {
-    console.log("✅ MongoDB connected successfully");
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📍 API URL: http://localhost:${PORT}`);
-      if (verifyReportImage) {
-        console.log('🤖 AI Verification: Enabled');
-      } else {
-        console.log('⚠️  AI Verification: Disabled');
-      }
-      console.log('🎓 College verification required for reporting: Enabled');
-      console.log('✅ Owner verification system: Active');
+  if (!mongoUri) {
+    console.log("⚠️ MONGO_URI not found. Starting in-memory MongoDB for development...");
+    try {
+      const { MongoMemoryServer } = require("mongodb-memory-server");
+      const mongoServer = await MongoMemoryServer.create();
+      mongoUri = mongoServer.getUri();
+      console.log(`✅ In-memory MongoDB started at ${mongoUri}`);
+    } catch (err) {
+      console.log("⚠️ Could not start mongodb-memory-server. Falling back to local MongoDB...");
+      mongoUri = "mongodb://127.0.0.1:27017/dormwatch";
+    }
+  }
+
+  mongoose.connect(mongoUri)
+    .then(() => {
+      console.log("✅ MongoDB connected successfully");
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`📍 API URL: http://localhost:${PORT}`);
+        if (verifyReportImage) {
+          console.log('🤖 AI Verification: Enabled');
+        } else {
+          console.log('⚠️  AI Verification: Disabled');
+        }
+        console.log('🎓 College verification required for reporting: Enabled');
+        console.log('✅ Owner verification system: Active');
+      });
+    })
+    .catch(err => {
+      console.error("❌ MongoDB connection error:", err);
+      process.exit(1);
     });
-  })
-  .catch(err => console.error("❌ MongoDB connection error:", err));
+}
+
+startServer();
