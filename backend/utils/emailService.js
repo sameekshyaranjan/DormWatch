@@ -84,19 +84,21 @@ async function sendPasswordResetSuccessEmail(userEmail, userName) {
 }
 
 async function sendOTPEmail(to, otp, type) {
-  const isVerification = type === 'verification';
+  let subject, heading, message;
 
-  const subject = isVerification
-    ? 'Verify Your Email - DormWatch'
-    : 'Reset Your Password - DormWatch';
-
-  const heading = isVerification
-    ? 'Email Verification'
-    : 'Password Reset';
-
-  const message = isVerification
-    ? 'Thank you for registering on DormWatch. Use the code below to verify your email address.'
-    : 'We received a request to reset your password. Use the code below to proceed.';
+  if (type === 'verification') {
+    subject = 'Verify Your Email - DormWatch';
+    heading = 'Email Verification';
+    message = 'Thank you for registering on DormWatch. Use the code below to verify your email address.';
+  } else if (type === 'college-verification') {
+    subject = 'Verify Your College Email - DormWatch';
+    heading = 'College Email Verification';
+    message = 'Please use the verification code below to confirm your student status. This allows you to post authentic safety reports on DormWatch.';
+  } else {
+    subject = 'Reset Your Password - DormWatch';
+    heading = 'Password Reset';
+    message = 'We received a request to reset your password. Use the code below to proceed.';
+  }
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
