@@ -111,22 +111,25 @@ export const Home: React.FC = () => {
 
   const testimonials = [
     {
-      quote: "Found water quality issues in 3 PGs near my college BEFORE signing any lease. This platform saved me from a nightmare.",
+      quote: "I avoided a leasing nightmare because a previous student uploaded photos of black mold in the bathroom. This app is a lifesaver.",
       author: "Priya S.",
-      role: "Engineering Student, Bengaluru",
-      rating: 5
+      role: "Undergrad, Bengaluru",
+      rating: 5,
+      avatar: "https://api.dicebear.com/7.x/notionists/svg?seed=Priya&backgroundColor=c7d2fe"
     },
     {
-      quote: "As a parent, I can now verify my daughter's accommodation safety from 500km away. Peace of mind is priceless.",
+      quote: "My daughter moved 500km away for college. Being able to independently verify her building's security score gives me absolute peace of mind.",
       author: "Rajesh K.",
       role: "Parent, Chennai",
-      rating: 5
+      rating: 5,
+      avatar: "https://api.dicebear.com/7.x/notionists/svg?seed=Rajesh&backgroundColor=bbf7d0"
     },
     {
-      quote: "Our trust score improved from 62 to 94 after we fixed reported issues. Good for students AND honest owners.",
+      quote: "We take safety seriously, and this platform finally lets us prove it. Fixing issues quickly boosted our trust score and filled our vacancies.",
       author: "Venkat R.",
-      role: "PG Owner, Bangalore",
-      rating: 5
+      role: "Property Manager, Bangalore",
+      rating: 5,
+      avatar: "https://api.dicebear.com/7.x/notionists/svg?seed=Venkat&backgroundColor=e9d5ff"
     }
   ];
 
@@ -573,43 +576,55 @@ export const Home: React.FC = () => {
       </div>
 
       {/* ================= TESTIMONIALS ================= */}
-      <div className="py-16 lg:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+      <div className="py-24 lg:py-32 bg-[#030712] relative overflow-hidden">
+        {/* Subtle top border/glow to separate from previous white section */}
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+        
+        {/* Background glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] max-w-4xl bg-gradient-to-tr from-yellow-500/5 via-orange-500/5 to-transparent blur-[120px] pointer-events-none rounded-full"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-20">
             <FadeIn delay={0}>
-              <span className="inline-block px-4 py-1 rounded-full bg-yellow-100 text-yellow-700 text-sm font-semibold mb-4">
-                TESTIMONIALS
-              </span>
+              <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs font-bold tracking-widest uppercase mb-6">
+                <FiStar className="w-3.5 h-3.5 fill-current" />
+                <span>Wall of Love</span>
+              </div>
             </FadeIn>
             <ScrollReveal delay={100}>
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Real Stories from <span className="text-yellow-600">Real Users</span>
+              <h2 className="text-4xl lg:text-5xl font-extrabold text-white mb-6 tracking-tight">
+                Trusted by thousands <br className="hidden sm:block" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">across the country.</span>
               </h2>
             </ScrollReveal>
           </div>
 
           <StaggerReveal stagger={150} className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, i) => (
-              <ScaleIn key={i} delay={i * 150} scale={0.9}>
-                <div className="bg-gray-50 rounded-2xl p-6 relative h-full">
-                  {/* Quote Mark */}
-                  <div className="absolute -top-4 left-6 text-6xl text-blue-200 font-serif">"</div>
+              <ScaleIn key={i} delay={i * 150} scale={0.95}>
+                <div className="group bg-white/[0.02] border border-white/5 rounded-3xl p-8 lg:p-10 relative h-full flex flex-col hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
                   
-                  <div className="relative z-10">
+                  {/* Decorative Quote Mark */}
+                  <div className="absolute top-6 right-8 text-6xl text-white/5 font-serif font-black select-none pointer-events-none group-hover:text-yellow-500/10 transition-colors duration-500">"</div>
+                  
+                  <div className="relative z-10 flex-1 flex flex-col">
                     {/* Stars */}
-                    <div className="flex gap-1 mb-4">
+                    <div className="flex gap-1.5 mb-8">
                       {[...Array(testimonial.rating)].map((_, j) => (
-                        <FiStar key={j} className="h-5 w-5 text-yellow-400 fill-current" />
+                        <FiStar key={j} className="h-5 w-5 text-yellow-400 fill-current drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
                       ))}
                     </div>
                     
-                    <p className="text-gray-700 mb-6 leading-relaxed italic">
+                    <p className="text-gray-300 mb-10 text-lg leading-relaxed flex-1 font-medium">
                       "{testimonial.quote}"
                     </p>
                     
-                    <div>
-                      <div className="font-bold text-gray-900">{testimonial.author}</div>
-                      <div className="text-gray-500 text-sm">{testimonial.role}</div>
+                    <div className="flex items-center gap-4 border-t border-white/10 pt-6 mt-auto">
+                      <img src={testimonial.avatar} alt={testimonial.author} className="w-12 h-12 rounded-full bg-white/10 border border-white/20 shadow-sm" />
+                      <div>
+                        <div className="font-bold text-white text-lg tracking-tight">{testimonial.author}</div>
+                        <div className="text-gray-500 text-sm font-medium">{testimonial.role}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
