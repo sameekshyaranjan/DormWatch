@@ -41,8 +41,8 @@ export function useScrollReveal(options?: UseScrollRevealOptions) {
         }
       },
       {
-        threshold: 0.12,
-        rootMargin: '0px 0px -40px 0px',
+        threshold: 0,
+        rootMargin: '100px 0px 100px 0px',
         ...observerOptions,
       }
     );
