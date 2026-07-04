@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🛡️ SafeStay</h1>
+  <h1>🛡️ DormWatch</h1>
   <p><strong>Verified Safety Intelligence & Resolution Network for Student Housing</strong></p>
 
   <!-- Badges -->
