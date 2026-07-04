@@ -377,11 +377,11 @@ async function seedDatabase() {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash('password123', salt);
 
-    let owner = await User.findOne({ email: 'owner@safestay.com' });
+    let owner = await User.findOne({ email: 'owner@dormwatch.com' });
     if (!owner) {
       owner = new User({
-        name: 'SafeStay Admin Owner',
-        email: 'owner@safestay.com',
+        name: 'DormWatch Admin Owner',
+        email: 'owner@dormwatch.com',
         password: hashedPassword,
         role: 'owner',
         isVerified: true,

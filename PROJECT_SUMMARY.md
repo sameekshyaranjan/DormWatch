@@ -1,11 +1,11 @@
-# SafeStay (formerly DormWatch) - Technical Project Summary
+# DormWatch - Technical Project Summary
 
 *This document contains verified, factual metrics and architectural details extracted directly from the codebase to assist in generating accurate resume bullet points.*
 
 ---
 
 ## 1. Project Overview
-**SafeStay** (originally built as *DormWatch*) is a verified, student-driven safety intelligence platform for student housing in India. It solves the problem of misleading housing reviews and hidden safety hazards (e.g., food poisoning, lack of security, bad water quality) by replacing static reviews with a dynamic, AI-verified trust engine. Verified students submit hazard reports with photo evidence, which directly penalizes a property's dynamic safety score until the owner resolves it. 
+**DormWatch** is a verified, student-driven safety intelligence platform for student housing in India. It solves the problem of misleading housing reviews and hidden safety hazards (e.g., food poisoning, lack of security, bad water quality) by replacing static reviews with a dynamic, AI-verified trust engine. Verified students submit hazard reports with photo evidence, which directly penalizes a property's dynamic safety score until the owner resolves it. 
 
 **Deployment Status:** Live 
 - Frontend: `https://dormwatch-six.vercel.app/`
@@ -59,7 +59,7 @@
 
 ### Fully Implemented
 - **Universal OTP Authentication:** Bypasses cloud-provider SMTP blocks using the SendGrid SDK to deliver 6-digit OTPs to any email address. Implemented in `backend/utils/emailService.js`.
-- **SafeStay Safety Index (SSI):** A weighted algorithm that dynamically calculates a 0–100 trust score for properties. Implemented via Mongoose triggers/utils. Penalties are weighted by severity (High=-15, Medium=-10, Low=-5) and linearly decay over 365 days.
+- **DormWatch Safety Index (DSI):** A weighted algorithm that dynamically calculates a 0–100 trust score for properties. Implemented via Mongoose triggers/utils. Penalties are weighted by severity (High=-15, Medium=-10, Low=-5) and linearly decay over 365 days.
 - **Tri-Model AI Consensus Pipeline:** Takes user-submitted images and text, queries three distinct LLM providers in parallel, parses the JSON responses, and enforces a 2-out-of-3 agreement rule before validating the hazard. Implemented in `backend/models/Report.js` (schema) and respective controllers.
 - **Closed-Loop Resolution Engine:** Owners can respond to reports by uploading proof of a fix. The original student must explicitly accept the resolution to restore the owner's SSI score. Implemented via RBAC routes in `backend/routes/server.js`.
 - **Geospatial Discovery Map:** An interactive Leaflet map that fetches lightweight property coordinates (`/api/accommodations/with-location`) and renders color-coded markers based on live SSI scores. Implemented in `frontend/src/components/AccommodationMap.tsx`.

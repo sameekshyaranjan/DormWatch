@@ -33,9 +33,9 @@
 
 Finding safe, reliable student accommodation in India often relies on easily manipulated reviews, biased broker suggestions, and misleading advertisements. Students frequently face hidden issues related to food safety, water quality, and severe security threats that only become apparent after moving in.
 
-**SafeStay** (formerly DormWatch) is a verified, student-driven safety intelligence platform that solves this problem by completely replacing static, gamified reviews with a dynamic trust engine. 
+**DormWatch** is a verified, student-driven safety intelligence platform that solves this problem by completely replacing static, gamified reviews with a dynamic trust engine. 
 
-Instead of writing text reviews, verified students report specific safety hazards. These reports are evaluated by a 3-model AI consensus pipeline (Mistral, Groq, Gemini) to prevent spam and verify visual evidence. Validated reports immediately impact a property's **SafeStay Safety Index (SSI)**—a dynamic 0–100 score that decays over time. Property owners are incentivized to resolve issues via a dedicated Owner Portal; when a student confirms an issue is resolved, the property's SSI score recovers.
+Instead of writing text reviews, verified students report specific safety hazards. These reports are evaluated by a 3-model AI consensus pipeline (Mistral, Groq, Gemini) to prevent spam and verify visual evidence. Validated reports immediately impact a property's **DormWatch Safety Index (DSI)**—a dynamic 0–100 score that decays over time. Property owners are incentivized to resolve issues via a dedicated Owner Portal; when a student confirms an issue is resolved, the property's DSI score recovers.
 
 ---
 
@@ -44,7 +44,7 @@ Instead of writing text reviews, verified students report specific safety hazard
 ### Implemented
 
 *   **Universal OTP Authentication:** Passwordless, OTP-based login via SendGrid's email API, ensuring delivery to any email address without cloud-provider SMTP blocking.
-*   **SafeStay Safety Index (SSI):** A dynamic scoring algorithm (0-100) applied to every property. The score calculates base trust minus penalties for active reports, factoring in issue severity and a 365-day time decay.
+*   **DormWatch Safety Index (DSI):** A dynamic scoring algorithm (0-100) applied to every property. The score calculates base trust minus penalties for active reports, factoring in issue severity and a 365-day time decay.
 *   **Tri-Model AI Verification Pipeline:** When a report is filed with photo evidence, it is analyzed in parallel by Mistral Pixtral 12B (vision), Groq Llama 3.3 70B (context), and Gemini 2.0 Flash (cross-validation). A 2-of-3 consensus is required to auto-approve reports.
 *   **Closed-Loop Issue Resolution:** Owners can submit photographic proof that a hazard has been resolved. The original reporting student must verify the resolution before the trust score penalty is lifted.
 *   **Interactive Safety Map:** Location-based discovery powered by Leaflet, plotting accommodations using live coordinates and color-coded SSI markers (Red/Yellow/Green).
@@ -114,7 +114,7 @@ The **SSI Logic** starts every accommodation at 100 points. Penalties are subtra
 ## Project Structure
 
 ```text
-SafeStay/
+DormWatch/
 ├── backend/                  # Express API Server
 │   ├── config/               # Cloudinary & environment configs
 │   ├── middleware/           # JWT, Roles (Admin/Owner), Rate limiting
@@ -162,7 +162,7 @@ npm install
 Create `backend/.env` (Never commit this file):
 ```env
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/safestay
+MONGO_URI=mongodb://localhost:27017/dormwatch
 JWT_SECRET=your_super_secret_jwt_key
 
 # SendGrid (Required for Authentication)
@@ -223,7 +223,7 @@ The application will be accessible at `http://localhost:5173`.
 
 ## User Roles & Permissions
 
-SafeStay utilizes strict Role-Based Access Control (RBAC) via Express middleware (`authMiddleware`, `adminMiddleware`, `ownerMiddleware`).
+DormWatch utilizes strict Role-Based Access Control (RBAC) via Express middleware (`authMiddleware`, `adminMiddleware`, `ownerMiddleware`).
 
 1.  **Student (Default):** Can browse accommodations, submit safety reports, upvote existing reports, and verify/dispute resolutions made by owners.
 2.  **Owner:** Must undergo manual verification (submitting Gov ID/Deed) by an Admin before full access is granted. Can list accommodations, view reports targeting their properties, and submit resolutions. Owners cannot submit reports against other properties.

@@ -104,11 +104,25 @@ const authLimiter = rateLimit({
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10000, // Increased for local development to prevent rate limiting issues
+  max: process.env.NODE_ENV === 'production' ? 200 : 10000,
   message: { success: false, message: 'Too many requests. Please slow down.' },
   standardHeaders: true,
   legacyHeaders: false
 });
+
+const reportLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { success: false, message: 'Too many reports submitted. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+// Helper: strip internal error details in production
+function safeError(error) {
+  if (process.env.NODE_ENV === 'production') return undefined;
+  return error?.message || String(error);
+}
 
 // Apply rate limiters
 app.use('/api/auth/login', authLimiter);
@@ -277,7 +291,7 @@ app.get('/api/reports/my-reports', authMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error fetching your reports',
-      error: error.message
+      error: safeError(error)
     });
   }
 });
@@ -304,7 +318,7 @@ app.get('/api/reports', async (req, res) => {
 });
 
 // ✅ POST new report — ONLY COLLEGE VERIFIED STUDENTS + AI VERIFICATION
-app.post('/api/reports', authMiddleware, async (req, res) => {
+app.post('/api/reports', authMiddleware, reportLimiter, async (req, res) => {
   try {
     // ========================================
     // STEP 1: GET USER AND VERIFY
@@ -319,14 +333,16 @@ app.post('/api/reports', authMiddleware, async (req, res) => {
       });
     }
 
-    // Debug logging
-    console.log('========================================');
-    console.log('[Report] User:', user.email);
-    console.log('[Report] Role:', user.role);
-    console.log('[Report] isCollegeVerified:', user.isCollegeVerified);
-    console.log('[Report] collegeName:', user.collegeName);
-    console.log('[Report] isBanned:', user.isBanned);
-    console.log('========================================');
+    // Debug logging (dev only — avoids PII leak in production logs)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('========================================');
+      console.log('[Report] User:', user.email);
+      console.log('[Report] Role:', user.role);
+      console.log('[Report] isCollegeVerified:', user.isCollegeVerified);
+      console.log('[Report] collegeName:', user.collegeName);
+      console.log('[Report] isBanned:', user.isBanned);
+      console.log('========================================');
+    }
 
     // Check if banned
     if (user.isBanned === true) {
@@ -547,7 +563,7 @@ app.post('/api/reports', authMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error saving report',
-      error: error.message
+      error: safeError(error)
     });
   }
 });
@@ -628,7 +644,7 @@ app.put('/api/reports/:id', authMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error updating report',
-      error: error.message
+      error: safeError(error)
     });
   }
 });
@@ -661,7 +677,7 @@ app.delete('/api/reports/:id', authMiddleware, async (req, res) => {
 
     res.json({ success: true, message: 'Report deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error deleting report', error: error.message });
+    res.status(500).json({ success: false, message: 'Error deleting report', error: safeError(error) });
   }
 });
 
@@ -767,7 +783,7 @@ app.put('/api/reports/:id/verify', authMiddleware, async (req, res) => {
     res.json({ success: true, message: accepted ? 'Resolution verified' : 'Resolution disputed', data: report });
   } catch (error) {
     console.error('VERIFY ERROR:', error);
-    res.status(500).json({ success: false, message: 'Error verifying report', error: error.message });
+    res.status(500).json({ success: false, message: 'Error verifying report', error: safeError(error) });
   }
 });
 
@@ -800,7 +816,7 @@ app.get('/api/reports/:id/resolution', authMiddleware, async (req, res) => {
 // AI VERIFICATION TEST ENDPOINT
 // ============================================================
 
-app.post('/api/test-ai-verification', authMiddleware, async (req, res) => {
+app.post('/api/test-ai-verification', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { imageUrl, issueType } = req.body;
 
@@ -829,7 +845,7 @@ app.post('/api/test-ai-verification', authMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'AI verification test failed',
-      error: error.message
+      error: safeError(error)
     });
   }
 });
@@ -911,7 +927,7 @@ app.get('/api/admin/stats', authMiddleware, adminMiddleware, async (req, res) =>
     });
   } catch (error) {
     console.error('Admin stats error:', error);
-    res.status(500).json({ success: false, message: 'Error fetching stats', error: error.message });
+    res.status(500).json({ success: false, message: 'Error fetching stats', error: safeError(error) });
   }
 });
 
@@ -997,7 +1013,7 @@ app.get('/api/admin/reports', authMiddleware, adminMiddleware, async (req, res) 
     res.json({ success: true, data: transformedReports });
   } catch (error) {
     console.error('Admin reports error:', error);
-    res.status(500).json({ success: false, message: 'Error fetching reports', error: error.message });
+    res.status(500).json({ success: false, message: 'Error fetching reports', error: safeError(error) });
   }
 });
 
@@ -1033,7 +1049,7 @@ app.put('/api/admin/reports/:id/status', authMiddleware, adminMiddleware, async 
 
     res.json({ success: true, message: `Report ${status}`, data: report });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error updating report', error: error.message });
+    res.status(500).json({ success: false, message: 'Error updating report', error: safeError(error) });
   }
 });
 
@@ -1058,7 +1074,7 @@ app.delete('/api/admin/reports/:id', authMiddleware, adminMiddleware, async (req
 
     res.json({ success: true, message: 'Report deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error deleting report', error: error.message });
+    res.status(500).json({ success: false, message: 'Error deleting report', error: safeError(error) });
   }
 });
 
@@ -1072,7 +1088,7 @@ app.get('/api/admin/users', authMiddleware, adminMiddleware, async (req, res) =>
 
     res.json({ success: true, data: users });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error fetching users', error: error.message });
+    res.status(500).json({ success: false, message: 'Error fetching users', error: safeError(error) });
   }
 });
 
@@ -1102,7 +1118,7 @@ app.put('/api/admin/users/:id/ban', authMiddleware, adminMiddleware, async (req,
       data: user
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error updating user', error: error.message });
+    res.status(500).json({ success: false, message: 'Error updating user', error: safeError(error) });
   }
 });
 
@@ -1118,7 +1134,7 @@ app.get('/api/admin/counter-reports', authMiddleware, adminMiddleware, async (re
 
     res.json({ success: true, data: counterReports });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error fetching counter reports', error: error.message });
+    res.status(500).json({ success: false, message: 'Error fetching counter reports', error: safeError(error) });
   }
 });
 
@@ -1153,7 +1169,7 @@ app.put('/api/admin/counter-reports/:id', authMiddleware, adminMiddleware, async
 
     res.json({ success: true, message: `Counter report ${status}`, data: counterReport });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error reviewing counter report', error: error.message });
+    res.status(500).json({ success: false, message: 'Error reviewing counter report', error: safeError(error) });
   }
 });
 
@@ -1202,7 +1218,7 @@ app.put('/api/admin/reports/:id/reopen', authMiddleware, adminMiddleware, async 
     res.json({ success: true, message: 'Report reopened for owner', data: report });
   } catch (error) {
     console.error('REOPEN ERROR:', error);
-    res.status(500).json({ success: false, message: 'Error reopening report', error: error.message });
+    res.status(500).json({ success: false, message: 'Error reopening report', error: safeError(error) });
   }
 });
 
@@ -1231,7 +1247,7 @@ app.get('/api/admin/ai-performance', authMiddleware, adminMiddleware, async (req
 
     res.json({ success: true, data: aiPerformance });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error fetching AI performance', error: error.message });
+    res.status(500).json({ success: false, message: 'Error fetching AI performance', error: safeError(error) });
   }
 });
 
@@ -1321,7 +1337,7 @@ app.put('/api/admin/verify-owner/:id', authMiddleware, adminMiddleware, async (r
     res.status(500).json({
       success: false,
       message: 'Error verifying owner',
-      error: error.message
+      error: safeError(error)
     });
   }
 });
@@ -1390,7 +1406,7 @@ app.put('/api/admin/reject-owner/:id', authMiddleware, adminMiddleware, async (r
     res.status(500).json({
       success: false,
       message: 'Error rejecting owner',
-      error: error.message
+      error: safeError(error)
     });
   }
 });
@@ -1428,7 +1444,7 @@ app.get('/api/owner/verification-status', authMiddleware, ownerMiddleware, async
     res.status(500).json({
       success: false,
       message: 'Error fetching verification status',
-      error: error.message
+      error: safeError(error)
     });
   }
 });
@@ -1468,7 +1484,7 @@ app.get('/api/owner/stats', authMiddleware, ownerMiddleware, async (req, res) =>
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error fetching stats', error: error.message });
+    res.status(500).json({ success: false, message: 'Error fetching stats', error: safeError(error) });
   }
 });
 
@@ -1478,7 +1494,7 @@ app.get('/api/owner/accommodations', authMiddleware, ownerMiddleware, async (req
     const accommodations = await Accommodation.find({ owner: req.user.id }).sort({ createdAt: -1 }).lean();
     res.json({ success: true, data: accommodations });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error fetching accommodations', error: error.message });
+    res.status(500).json({ success: false, message: 'Error fetching accommodations', error: safeError(error) });
   }
 });
 
@@ -1513,7 +1529,7 @@ app.post('/api/owner/accommodations', authMiddleware, ownerMiddleware, async (re
     const saved = await newAccommodation.save();
     res.status(201).json({ success: true, message: 'Accommodation added successfully', data: saved });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error adding accommodation', error: error.message });
+    res.status(500).json({ success: false, message: 'Error adding accommodation', error: safeError(error) });
   }
 });
 
@@ -1535,24 +1551,33 @@ app.put('/api/owner/accommodations/:id', authMiddleware, ownerMiddleware, async 
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
-    if (req.body.latitude !== undefined || req.body.longitude !== undefined) {
-      const parsedLat = req.body.latitude ? parseFloat(req.body.latitude) : null;
-      const parsedLng = req.body.longitude ? parseFloat(req.body.longitude) : null;
-      req.body.latitude = parsedLat !== null && !isNaN(parsedLat) ? parsedLat : null;
-      req.body.longitude = parsedLng !== null && !isNaN(parsedLng) ? parsedLng : null;
+    // ✅ SECURITY: Whitelist allowed fields to prevent mass-assignment attacks
+    const allowedFields = ['name', 'address', 'city', 'description', 'amenities', 'totalRooms', 'pricePerMonth', 'contactPhone', 'latitude', 'longitude', 'images'];
+    const updateData = {};
+    for (const field of allowedFields) {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    }
 
-      if (req.body.latitude && req.body.longitude) {
-        req.body.location = {
+    if (updateData.latitude !== undefined || updateData.longitude !== undefined) {
+      const parsedLat = updateData.latitude ? parseFloat(updateData.latitude) : null;
+      const parsedLng = updateData.longitude ? parseFloat(updateData.longitude) : null;
+      updateData.latitude = parsedLat !== null && !isNaN(parsedLat) ? parsedLat : null;
+      updateData.longitude = parsedLng !== null && !isNaN(parsedLng) ? parsedLng : null;
+
+      if (updateData.latitude && updateData.longitude) {
+        updateData.location = {
           type: 'Point',
-          coordinates: [req.body.longitude, req.body.latitude]
+          coordinates: [updateData.longitude, updateData.latitude]
         };
       }
     }
 
-    const updated = await Accommodation.findByIdAndUpdate(id, req.body, { new: true });
+    const updated = await Accommodation.findByIdAndUpdate(id, updateData, { new: true });
     res.json({ success: true, message: 'Accommodation updated', data: updated });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error updating accommodation', error: error.message });
+    res.status(500).json({ success: false, message: 'Error updating accommodation', error: safeError(error) });
   }
 });
 
@@ -1577,7 +1602,7 @@ app.delete('/api/owner/accommodations/:id', authMiddleware, ownerMiddleware, asy
     await Accommodation.findByIdAndDelete(id);
     res.json({ success: true, message: 'Accommodation deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error deleting accommodation', error: error.message });
+    res.status(500).json({ success: false, message: 'Error deleting accommodation', error: safeError(error) });
   }
 });
 
@@ -1600,7 +1625,7 @@ app.get('/api/owner/reports', authMiddleware, ownerMiddleware, async (req, res) 
 
     res.json({ success: true, data: reports });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error fetching reports', error: error.message });
+    res.status(500).json({ success: false, message: 'Error fetching reports', error: safeError(error) });
   }
 });
 
@@ -1661,7 +1686,7 @@ app.put('/api/owner/reports/:id/resolve', authMiddleware, ownerMiddleware, async
     res.json({ success: true, message: 'Report resolved successfully', data: report });
   } catch (error) {
     console.error('RESOLVE ERROR:', error);
-    res.status(500).json({ success: false, message: 'Error resolving report', error: error.message });
+    res.status(500).json({ success: false, message: 'Error resolving report', error: safeError(error) });
   }
 });
 
@@ -1717,7 +1742,7 @@ app.post('/api/owner/counter-report', authMiddleware, ownerMiddleware, async (re
 
     res.status(201).json({ success: true, message: 'Counter report submitted successfully', data: counterReport });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error submitting counter report', error: error.message });
+    res.status(500).json({ success: false, message: 'Error submitting counter report', error: safeError(error) });
   }
 });
 
@@ -1732,7 +1757,7 @@ app.get('/api/owner/counter-reports', authMiddleware, ownerMiddleware, async (re
 
     res.json({ success: true, data: counterReports });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error fetching counter reports', error: error.message });
+    res.status(500).json({ success: false, message: 'Error fetching counter reports', error: safeError(error) });
   }
 });
 
@@ -1765,7 +1790,7 @@ app.put('/api/owner/accommodations/:id/occupancy', authMiddleware, ownerMiddlewa
 
     res.json({ success: true, message: 'Occupancy updated', data: accommodation });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error updating occupancy', error: error.message });
+    res.status(500).json({ success: false, message: 'Error updating occupancy', error: safeError(error) });
   }
 });
 
@@ -2350,7 +2375,7 @@ app.get('/api/accommodations/:id', async (req, res) => {
   }
 });
 
-app.post('/api/accommodations/:id/recalculate-score', authMiddleware, async (req, res) => {
+app.post('/api/accommodations/:id/recalculate-score', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     await updateAccommodationScore(Accommodation, Report, req.params.id);
     const acc = await Accommodation.findById(req.params.id)
@@ -2362,18 +2387,7 @@ app.post('/api/accommodations/:id/recalculate-score', authMiddleware, async (req
 });
 
 // ============================================================
-// ERROR HANDLERS
-// ============================================================
-
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: `Route ${req.method} ${req.originalUrl} not found`
-  });
-});
-
-// ============================================================
-// VOICE ROUTES
+// VOICE ROUTES (must be before 404 handler)
 // ============================================================
 
 app.post('/api/voice/dsi', authMiddleware, async (req, res) => {
@@ -2395,6 +2409,17 @@ app.post('/api/voice/dsi', authMiddleware, async (req, res) => {
     console.error('[Voice] DSI readout error:', err.message);
     res.json({ success: true, audio: null });
   }
+});
+
+// ============================================================
+// ERROR HANDLERS
+// ============================================================
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.method} ${req.originalUrl} not found`
+  });
 });
 
 app.use((err, req, res, next) => {
