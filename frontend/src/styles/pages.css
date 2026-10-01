@@ -199,7 +199,7 @@
 .dw .listing-summary dt { font-size: 11px; font-weight: 700; color: #4a4d44; }
 .dw .listing-summary dd { margin: 6px 0 0; font-size: 32px; line-height: 1; letter-spacing: -.05em; font-weight: 650; font-variant-numeric: tabular-nums; }
 
-.dw .listing-toolbar-host { position: sticky; top: 64px; z-index: 20; margin-top: 18px; padding: 12px 0; background: rgba(240, 241, 238, .9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.dw .listing-toolbar-host { position: sticky; top: var(--dw-header-h, 64px); z-index: 20; margin-top: 18px; padding: 12px 0; background: rgba(240, 241, 238, .9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 .dw .listing-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .dw .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
 .dw .filter-group button { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 14px; border: 1px solid var(--line); border-radius: 30px; background: white; font-size: 13px; font-weight: 700; cursor: pointer; transition: background .2s, border-color .2s, color .2s; }
@@ -339,4 +339,55 @@
 /* Auth panel is narrow beside the lime aside on small laptops. */
 @media (min-width: 961px) and (max-width: 1240px) {
   .dw .field-row { grid-template-columns: 1fr; gap: 20px; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Demo accounts                                                       */
+/* ------------------------------------------------------------------ */
+.dw .spinner--dark { border-color: rgba(16, 17, 15, .2); border-top-color: var(--ink); }
+.dw .demo-error { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; font-weight: 700; color: #b5372c; }
+
+.dw .demo-box { margin-top: 26px; padding: 18px; border-radius: 18px; background: #f6f7f4; border: 1px solid var(--line); }
+.dw .demo-box__head h3 { margin-top: 10px; font-size: 17px; letter-spacing: -.03em; font-weight: 700; }
+.dw .demo-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; border-radius: 20px; background: var(--lime); font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.dw .demo-roles { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.dw .demo-role { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: white; text-align: left; cursor: pointer; transition: border-color .2s, transform .25s var(--ease), box-shadow .25s; }
+.dw .demo-role:hover:not(:disabled) { border-color: var(--ink); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(16, 17, 15, .08); }
+.dw .demo-role:disabled { cursor: progress; opacity: .7; }
+.dw .demo-role__icon { width: 38px; height: 38px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--lime); }
+.dw .demo-role__icon .spinner--dark { border-color: rgba(255, 255, 255, .3); border-top-color: var(--lime); }
+.dw .demo-role__text { flex: 1; min-width: 0; }
+.dw .demo-role__text strong { display: block; font-size: 14px; }
+.dw .demo-role__text small { display: block; margin-top: 2px; font-size: 12px; line-height: 1.45; color: var(--muted); }
+.dw .demo-role > svg { flex: none; transition: transform .25s var(--ease); }
+.dw .demo-role:hover > svg { transform: translateX(3px); }
+.dw .demo-note { margin-top: 12px; font-size: 11px; color: #7c7f77; text-align: center; }
+
+.dw .demo-quick { max-width: 600px; margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(16, 17, 15, .16); display: flex; align-items: center; flex-wrap: wrap; gap: 10px 12px; }
+.dw .demo-quick__label { font-size: 12px; font-weight: 800; }
+.dw .demo-quick__roles { display: flex; gap: 8px; flex-wrap: wrap; }
+.dw .demo-quick__roles button { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 13px; border: 1px solid rgba(16, 17, 15, .28); border-radius: 30px; background: rgba(255, 255, 255, .55); font-size: 12px; font-weight: 800; cursor: pointer; transition: background .2s, color .2s, border-color .2s, transform .25s var(--ease); }
+.dw .demo-quick__roles button:hover:not(:disabled) { background: var(--ink); border-color: var(--ink); color: white; transform: translateY(-1px); }
+.dw .demo-quick__roles button:disabled { cursor: progress; opacity: .7; }
+.dw .demo-quick .demo-error { flex-basis: 100%; margin-top: 0; }
+
+.dw .demo-bar { background: var(--ink); color: white; font-size: 12px; }
+.dw .demo-bar .nav-wrap { min-height: 44px; gap: 16px; padding-block: 6px; }
+.dw .demo-bar p { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.dw .demo-bar__tag { flex: none; padding: 3px 8px; border-radius: 20px; background: var(--lime); color: var(--ink); font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.dw .demo-bar__text { color: #c9cbc5; }
+.dw .demo-bar__text strong { color: white; }
+.dw .demo-bar__actions { display: flex; align-items: center; gap: 6px; flex: none; }
+.dw .demo-bar__label { margin-right: 2px; color: #8f928a; font-weight: 700; }
+.dw .demo-bar__actions button { display: inline-flex; align-items: center; gap: 5px; min-height: 30px; padding: 0 10px; border: 1px solid #3a3d37; border-radius: 20px; background: transparent; color: white; font-size: 11px; font-weight: 800; cursor: pointer; transition: background .2s, border-color .2s, color .2s; }
+.dw .demo-bar__actions button:hover:not(:disabled) { border-color: var(--lime); color: var(--lime); }
+.dw .demo-bar__actions .demo-bar__exit { background: var(--lime); border-color: var(--lime); color: var(--ink); }
+.dw .demo-bar__actions .demo-bar__exit:hover:not(:disabled) { background: var(--lime-deep); color: var(--ink); }
+.dw .demo-bar .spinner { width: 11px; height: 11px; }
+
+@media (max-width: 900px) {
+  .dw .demo-bar__text, .dw .demo-bar__label { display: none; }
+}
+@media (max-width: 960px) {
+  .dw .demo-quick { justify-content: center; margin-inline: auto; }
 }
