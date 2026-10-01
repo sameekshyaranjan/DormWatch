@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Icon } from '../components/landing/Icon';
 import { AuthLayout, Field, FormAlert, SubmitButton } from '../components/landing/AuthLayout';
 import { dashboardPath } from '../components/landing/SiteHeader';
+import { DemoAccounts } from '../components/landing/DemoLogin';
 
 function LoginAside() {
   return (
@@ -57,6 +58,13 @@ export const Login: React.FC = () => {
   const location = useLocation();
   // Set by ProtectedRoute when a signed-out visitor hits a protected page.
   const from: string | undefined = (location.state as any)?.from?.pathname;
+
+  // /login#demo (linked from sign-up) jumps straight to the demo accounts.
+  useEffect(() => {
+    if (location.hash !== '#demo') return;
+    const t = window.setTimeout(() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 120);
+    return () => window.clearTimeout(t);
+  }, [location.hash]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,6 +145,8 @@ export const Login: React.FC = () => {
       <div className="auth-switch">
         New to DormWatch? <Link to="/register">Create a free account</Link>
       </div>
+
+      <DemoAccounts />
 
       <div className="auth-foot">
         <Link to="/owner/register" className="auth-alt">

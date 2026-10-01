@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Icon } from '../components/landing/Icon';
 import { Logo, dashboardPath } from '../components/landing/SiteHeader';
+import { DemoQuickStart } from '../components/landing/DemoLogin';
 import { RealitySection } from '../components/landing/RealitySection';
 import { PhotoProof, OwnerAccountability } from '../components/landing/ProofFeatures';
 import { useInView, usePrefersReducedMotion } from '../components/landing/hooks';
@@ -225,6 +226,7 @@ function Hero() {
             <i>10k+</i> Trusted by 10,000+ students across India
           </span>
         </div>
+        {!user && <DemoQuickStart />}
       </div>
       <ProductVisual />
     </section>

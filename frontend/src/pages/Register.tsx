@@ -198,6 +198,8 @@ export const Register: React.FC = () => {
 
       <div className="auth-switch">
         Already have an account? <Link to="/login">Log in</Link>
+        <span className="auth-switch__sep" aria-hidden="true">·</span>
+        Just looking? <Link to="/login#demo">Try a demo account</Link>
       </div>
     </AuthLayout>
   );
