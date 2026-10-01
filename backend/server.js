@@ -126,6 +126,7 @@ function safeError(error) {
 
 // Apply rate limiters
 app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/demo-login', authLimiter);
 app.use('/api/auth/signup', authLimiter);
 app.use('/api/auth/register-owner', authLimiter);
 app.use('/api/profile/password', authLimiter);

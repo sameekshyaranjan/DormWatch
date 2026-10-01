@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
@@ -182,6 +183,104 @@ router.post("/signup", async (req, res) => {
       success: false, 
       message: err.message || "Server error during registration" 
     });
+  }
+});
+
+// ========================
+// POST /api/auth/demo-login
+// ========================
+// One-click demo accounts so visitors can try every role without signing up.
+// Accounts are created on first use and reset to a working state on every
+// demo login, so a visitor banning, rejecting or editing a demo account
+// can't break the demo for everyone else. Set DEMO_LOGIN=false to disable.
+const DEMO_ACCOUNTS = {
+  student: {
+    name: "Demo Student",
+    email: "demo.student@demo.dormwatch.app",
+    isCollegeVerified: true,
+    collegeName: "DormWatch Demo University",
+  },
+  owner: {
+    name: "Demo Owner",
+    email: "demo.owner@demo.dormwatch.app",
+    phone: "9000000000",
+    ownerVerificationStatus: "verified",
+    propertyName: "Demo Residency",
+    propertyCount: "1-2",
+  },
+  admin: {
+    name: "Demo Admin",
+    email: "demo.admin@demo.dormwatch.app",
+  },
+};
+
+router.post("/demo-login", async (req, res) => {
+  if (process.env.DEMO_LOGIN === "false") {
+    return res.status(404).json({ success: false, message: "Demo login is disabled" });
+  }
+
+  const role = req.body && req.body.role;
+  const preset = DEMO_ACCOUNTS[role];
+  if (!preset) {
+    return res.status(400).json({ success: false, message: "Choose a demo role: student, owner or admin" });
+  }
+
+  try {
+    let user = await User.findOne({ demoRole: role });
+    if (!user) {
+      // Random password nobody knows: demo accounts only sign in through this route.
+      const password = await bcrypt.hash(crypto.randomBytes(32).toString("hex"), 10);
+      user = new User({ password, demoRole: role });
+    }
+
+    Object.assign(user, preset, {
+      role,
+      isDemo: true,
+      isBanned: false,
+      isVerified: true,
+    });
+    if (role === "owner") {
+      user.rejectionReason = null;
+    }
+    await user.save();
+
+    const payload = {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isVerified: user.isVerified,
+        isCollegeVerified: user.isCollegeVerified,
+        collegeName: user.collegeName,
+        ownerVerificationStatus: user.ownerVerificationStatus || null,
+        isDemo: true,
+      },
+    };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isVerified: user.isVerified,
+        isCollegeVerified: user.isCollegeVerified,
+        collegeName: user.collegeName,
+        profilePhoto: user.profilePhoto,
+        phone: user.phone,
+        ownerVerificationStatus: user.ownerVerificationStatus,
+        propertyName: user.propertyName,
+        propertyCount: user.propertyCount,
+        isDemo: true,
+      },
+    });
+  } catch (err) {
+    console.error("Demo login error:", err);
+    res.status(500).json({ success: false, message: "Could not start the demo. Please try again." });
   }
 });
 

@@ -121,7 +121,22 @@ const userSchema = new mongoose.Schema({
     default: null
   },
   
+  // One-click demo accounts (see POST /api/auth/demo-login). Shared by all
+  // visitors; repaired on every demo login.
+  isDemo: {
+    type: Boolean,
+    default: false
+  },
+  demoRole: {
+    type: String,
+    enum: ['student', 'owner', 'admin'],
+    default: undefined
+  },
+
 }, { timestamps: true });
+
+// One demo account per role
+userSchema.index({ demoRole: 1 }, { unique: true, sparse: true });
 
 // ✅ Compound index for admin queries (owner verification listing)
 userSchema.index({ role: 1, ownerVerificationStatus: 1 });
