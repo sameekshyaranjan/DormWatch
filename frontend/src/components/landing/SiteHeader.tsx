@@ -3,9 +3,10 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { Icon } from './Icon';
+import { dashboardPath } from './paths';
+import { DEMO_ROLES, useDemoLogin } from './DemoLogin';
 
-export const dashboardPath = (role?: string) =>
-  role === 'owner' ? '/owner/dashboard' : role === 'admin' ? '/admin' : '/dashboard';
+export { dashboardPath };
 
 export function Logo({ inverse = false }: { inverse?: boolean }) {
   return (
@@ -77,6 +78,13 @@ export function SiteHeader() {
   }, []);
 
   const lang = (i18n.resolvedLanguage || i18n.language || 'en').slice(0, 2);
+  const demo = useDemoLogin();
+  const isDemo = !!user?.isDemo;
+
+  // Sticky elements below the header (e.g. the listings toolbar) read this.
+  useEffect(() => {
+    document.documentElement.style.setProperty('--dw-header-h', isDemo ? '108px' : '64px');
+  }, [isDemo]);
 
   const handleLogout = () => {
     logout();
@@ -212,6 +220,38 @@ export function SiteHeader() {
         </div>
         <span className="scroll-progress" style={{ transform: `scaleX(${progress})` }} aria-hidden="true" />
       </header>
+      {isDemo && user && (
+        <div className="demo-bar" role="region" aria-label="Demo mode">
+          <div className="nav-wrap">
+            <p>
+              <span className="demo-bar__tag">Demo</span>
+              <span className="demo-bar__text">
+                You're exploring as <strong>{user.name}</strong>. Changes are shared with other visitors.
+              </span>
+            </p>
+            <div className="demo-bar__actions">
+              <span className="demo-bar__label">Switch to</span>
+              {DEMO_ROLES.filter((d) => d.role !== user.role).map((d) => (
+                <button key={d.role} onClick={() => demo.start(d.role)} disabled={demo.loadingRole !== null}>
+                  {demo.loadingRole === d.role ? <span className="spinner" aria-hidden="true" /> : <Icon name={d.icon} size={13} />}
+                  {d.label}
+                </button>
+              ))}
+              <button
+                className="demo-bar__exit"
+                onClick={() => {
+                  // Full page load: dashboards redirect to /login as soon as the
+                  // user is cleared, which would otherwise beat a client-side navigate.
+                  logout();
+                  window.location.assign('/register');
+                }}
+              >
+                Exit &amp; sign up
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
