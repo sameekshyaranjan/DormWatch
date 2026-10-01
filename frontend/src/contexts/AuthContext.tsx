@@ -1,11 +1,14 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import type { User } from '../types';
 
+export type DemoRole = 'student' | 'owner' | 'admin';
+
 interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<User>;
+  demoLogin: (role: DemoRole) => Promise<User>;
   register: (name: string, email: string, password: string, role?: string) => Promise<any>;
   logout: () => void;
   refreshUser: () => void;
@@ -80,7 +83,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 isBanned: data.data.isBanned || false,
                 ownerVerificationStatus: data.data.ownerVerificationStatus || null,
                 propertyName: data.data.propertyName || null,
-                propertyCount: data.data.propertyCount || null
+                propertyCount: data.data.propertyCount || null,
+                isDemo: data.data.isDemo || false
               };
 
               setUser(updatedUser);
@@ -144,7 +148,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           isBanned: data.user?.isBanned || data.data?.user?.isBanned || false,
           ownerVerificationStatus: data.user?.ownerVerificationStatus || data.data?.user?.ownerVerificationStatus || null,
           propertyName: data.user?.propertyName || data.data?.user?.propertyName || null,
-          propertyCount: data.user?.propertyCount || data.data?.user?.propertyCount || null
+          propertyCount: data.user?.propertyCount || data.data?.user?.propertyCount || null,
+          isDemo: data.user?.isDemo || data.data?.user?.isDemo || false
         };
 
         localStorage.setItem("user", JSON.stringify(userData));
@@ -160,6 +165,40 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Login error:', error);
       throw error;
     }
+  };
+
+  // One-click demo account for the given role (no password needed).
+  const demoLogin = async (role: DemoRole): Promise<User> => {
+    const res = await fetch(`${API}/api/auth/demo-login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.token) {
+      throw new Error(data.message || 'Could not start the demo. Please try again.');
+    }
+    const userData: User = {
+      _id: data.user.id || data.user._id,
+      name: data.user.name,
+      email: data.user.email,
+      role: data.user.role,
+      isCollegeVerified: data.user.isCollegeVerified || false,
+      isVerified: data.user.isVerified || false,
+      collegeName: data.user.collegeName || null,
+      profilePhoto: data.user.profilePhoto || null,
+      phone: data.user.phone || null,
+      isBanned: false,
+      ownerVerificationStatus: data.user.ownerVerificationStatus || null,
+      propertyName: data.user.propertyName || null,
+      propertyCount: data.user.propertyCount || null,
+      isDemo: true,
+    };
+    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('token', data.token);
+    setUser(userData);
+    setToken(data.token);
+    return userData;
   };
 
   // ✅ Register function
@@ -257,6 +296,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       token, 
       loading, 
       login, 
+      demoLogin,
       register, 
       logout, 
       refreshUser,

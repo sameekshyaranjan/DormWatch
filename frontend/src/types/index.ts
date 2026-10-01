@@ -11,6 +11,8 @@ export interface User {
   isVerified?: boolean;
   isCollegeVerified?: boolean;
   isBanned?: boolean;
+  /** Shared one-click demo account (see POST /api/auth/demo-login). */
+  isDemo?: boolean;
   profilePhoto?: string;
   notificationPrefs?: Record<string, boolean>;
   ownerVerification?: {
