@@ -1,30 +1,150 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { 
-  FiSearch, FiMapPin, FiShield, FiAlertTriangle, FiTrendingUp, 
-  FiMap, FiList, FiGrid, FiArrowRight, FiCheckCircle, FiAlertCircle, FiXCircle, FiHome, FiTool
-} from 'react-icons/fi';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import AccommodationMap from '../components/AccommodationMap';
-import { 
-  ScrollReveal, 
-  StaggerReveal, 
-  FadeIn,
-  ScaleIn 
-} from '../components/ParallaxEffect';
+import { Icon } from '../components/landing/Icon';
+
+type Filter = 'all' | 'safe' | 'caution' | 'avoid';
+type Sort = 'score-desc' | 'score-asc' | 'reports' | 'name';
+
+const FILTERS: { id: Filter; label: string; tone?: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'safe', label: 'Excellent 80+', tone: 'green' },
+  { id: 'caution', label: 'Fair 50–79', tone: 'amber' },
+  { id: 'avoid', label: 'Critical <50', tone: 'red' },
+];
+
+const SORTS: { id: Sort; label: string }[] = [
+  { id: 'score-desc', label: 'Highest Trust Score' },
+  { id: 'score-asc', label: 'Lowest Trust Score' },
+  { id: 'reports', label: 'Most reports' },
+  { id: 'name', label: 'Name (A–Z)' },
+];
+
+const TYPE_LABEL: Record<string, string> = { pg: 'PG', hostel: 'Hostel', apartment: 'Apartment' };
+
+const scoreOf = (acc: any): number => Math.round(Number(acc.trustScore ?? acc.dsi ?? 0));
+const toneOf = (score: number) => (score >= 80 ? 'green' : score >= 50 ? 'amber' : 'red');
+const labelOf = (score: number) => (score >= 80 ? 'Excellent' : score >= 50 ? 'Fair' : 'Critical');
+const reportsOf = (acc: any): number => Number(acc.totalReports ?? acc.reportCount ?? 0);
+const rentOf = (acc: any): number | null => {
+  const rent = Number(acc.monthlyRent ?? acc.pricePerMonth ?? 0);
+  return rent > 0 ? rent : null;
+};
+const matchesFilter = (score: number, filter: Filter) =>
+  filter === 'all' ||
+  (filter === 'safe' && score >= 80) ||
+  (filter === 'caution' && score >= 50 && score < 80) ||
+  (filter === 'avoid' && score < 50);
+
+function PropertyCard({ acc, view }: { acc: any; view: 'grid' | 'list' }) {
+  const score = scoreOf(acc);
+  const tone = toneOf(score);
+  const reports = reportsOf(acc);
+  const verified = Number(acc.verifiedReportCount ?? 0);
+  const rent = rentOf(acc);
+  const place = [...new Set([acc.area, acc.city].filter(Boolean))].join(', ') || acc.address;
+
+  return (
+    <Link to={`/accommodations/${acc._id}`} className={`prop-card prop-card--${view}`}>
+      <div className="prop-media">
+        {acc.images?.length > 0 ? (
+          <img src={acc.images[0]} alt={acc.name} loading="lazy" />
+        ) : (
+          <div className="prop-media__empty">
+            <Icon name="home" size={30} />
+            <span>No photos yet</span>
+          </div>
+        )}
+        <span className={`prop-score prop-score--${tone}`}>
+          <i /> {score} · {labelOf(score)}
+        </span>
+        {acc.images?.length > 1 && (
+          <span className="prop-photos"><Icon name="camera" size={12} /> {acc.images.length}</span>
+        )}
+      </div>
+
+      <div className="prop-body">
+        <div className="prop-title">
+          <div>
+            <span className="micro-label">{(TYPE_LABEL[acc.type] || acc.type || 'Hostel / PG').toString().toUpperCase()}</span>
+            <h3>{acc.name}</h3>
+          </div>
+          <span className={`prop-ring prop-ring--${tone}`} style={{ '--p': score } as React.CSSProperties} aria-label={`Trust Score ${score} out of 100`}>
+            <strong>{score}</strong>
+          </span>
+        </div>
+
+        <p className="prop-place"><Icon name="pin" size={14} /> {place}</p>
+
+        <dl className="prop-stats">
+          <div>
+            <dt>Reports</dt>
+            <dd>{reports}</dd>
+          </div>
+          <div>
+            <dt>Verified</dt>
+            <dd>{verified}</dd>
+          </div>
+          <div>
+            <dt>Rent</dt>
+            <dd>{rent ? `₹${rent.toLocaleString('en-IN')}` : '—'}</dd>
+          </div>
+        </dl>
+
+        <div className="prop-foot">
+          {acc.isVerified ? (
+            <span className="prop-verified"><Icon name="check" size={13} /> Verified property</span>
+          ) : (
+            <span className="prop-unverified">Owner not yet verified</span>
+          )}
+          <span className="prop-cta">Safety profile <Icon name="arrow" size={15} /></span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function SkeletonCard() {
+  return (
+    <div className="prop-card prop-card--grid is-skeleton" aria-hidden="true">
+      <div className="prop-media sk" />
+      <div className="prop-body">
+        <span className="sk sk-line" style={{ width: '40%' }} />
+        <span className="sk sk-line sk-line--lg" style={{ width: '75%' }} />
+        <span className="sk sk-line" style={{ width: '60%' }} />
+        <span className="sk sk-block" />
+      </div>
+    </div>
+  );
+}
 
 export const AccommodationList: React.FC = () => {
   const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   const [accommodations, setAccommodations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<string>('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  // Pre-filled from the landing page search (?q=Koramangala)
+  const [searchTerm, setSearchTerm] = useState(() => searchParams.get('q') ?? '');
+  const [selectedFilter, setSelectedFilter] = useState<Filter>('all');
+  const [sort, setSort] = useState<Sort>('score-desc');
   const [showMap, setShowMap] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   useEffect(() => {
     fetchAccommodations();
   }, []);
+
+  // Keep ?q= in the URL so searches can be shared and survive a refresh.
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      const next = new URLSearchParams(searchParams);
+      if (searchTerm.trim()) next.set('q', searchTerm.trim());
+      else next.delete('q');
+      if (next.toString() !== searchParams.toString()) setSearchParams(next, { replace: true });
+    }, 300);
+    return () => window.clearTimeout(t);
+  }, [searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchAccommodations = async () => {
     try {
@@ -42,265 +162,234 @@ export const AccommodationList: React.FC = () => {
     }
   };
 
-  const filteredAccommodations = (accommodations || []).filter(acc => {
-    const matchesSearch = !searchTerm || 
-      acc.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      acc.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      acc.city?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    let matchesFilter = true;
-    if (selectedFilter === 'safe') matchesFilter = (acc.trustScore >= 80);
-    else if (selectedFilter === 'caution') matchesFilter = (acc.trustScore >= 50 && acc.trustScore < 80);
-    else if (selectedFilter === 'avoid') matchesFilter = (acc.trustScore < 50);
+  const searched = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    return (accommodations || []).filter(
+      (acc) =>
+        !q ||
+        acc.name?.toLowerCase().includes(q) ||
+        acc.address?.toLowerCase().includes(q) ||
+        acc.area?.toLowerCase().includes(q) ||
+        acc.city?.toLowerCase().includes(q)
+    );
+  }, [accommodations, searchTerm]);
 
-    return matchesSearch && matchesFilter;
-  });
+  const counts = useMemo(() => {
+    const c: Record<Filter, number> = { all: searched.length, safe: 0, caution: 0, avoid: 0 };
+    searched.forEach((acc) => {
+      const s = scoreOf(acc);
+      if (s >= 80) c.safe += 1;
+      else if (s >= 50) c.caution += 1;
+      else c.avoid += 1;
+    });
+    return c;
+  }, [searched]);
 
-  const getScoreBadge = (score: number) => {
-    if (score >= 80) return (
-      <div className="bg-green-100 text-green-700 px-3 py-1 rounded-xl font-bold inline-flex items-center gap-1.5 text-sm">
-        <FiShield className="text-xs" /> {score} - Safe
-      </div>
-    );
-    if (score >= 50) return (
-      <div className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-xl font-bold inline-flex items-center gap-1.5 text-sm">
-        <FiAlertCircle className="text-xs" /> {score} - Caution
-      </div>
-    );
-    return (
-      <div className="bg-red-100 text-red-700 px-3 py-1 rounded-xl font-bold inline-flex items-center gap-1.5 text-sm">
-        <FiXCircle className="text-xs" /> {score} - Avoid
-      </div>
-    );
+  const results = useMemo(() => {
+    const list = searched.filter((acc) => matchesFilter(scoreOf(acc), selectedFilter));
+    const sorted = [...list];
+    if (sort === 'score-desc') sorted.sort((a, b) => scoreOf(b) - scoreOf(a));
+    else if (sort === 'score-asc') sorted.sort((a, b) => scoreOf(a) - scoreOf(b));
+    else if (sort === 'reports') sorted.sort((a, b) => reportsOf(b) - reportsOf(a));
+    else sorted.sort((a, b) => String(a.name).localeCompare(String(b.name)));
+    return sorted;
+  }, [searched, selectedFilter, sort]);
+
+  const summary = useMemo(() => {
+    const scores = accommodations.map(scoreOf);
+    const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+    const cities = new Set(accommodations.map((a) => a.city).filter(Boolean));
+    return { total: accommodations.length, avg, excellent: scores.filter((s) => s >= 80).length, cities: cities.size };
+  }, [accommodations]);
+
+  // Popular areas come from the data itself, most listed first.
+  const popularAreas = useMemo(() => {
+    const freq = new Map<string, number>();
+    accommodations.forEach((a) => {
+      const key = a.area || a.city;
+      if (key) freq.set(key, (freq.get(key) || 0) + 1);
+    });
+    return [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k]) => k);
+  }, [accommodations]);
+
+  const resetFilters = () => {
+    setSearchTerm('');
+    setSelectedFilter('all');
   };
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="flex flex-col items-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-        <p className="text-gray-600 font-medium">Finding safe accommodations...</p>
-      </div>
-    </div>
-  );
-
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header Section */}
-      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollReveal delay={0} distance={30}>
-            <h1 className="text-4xl lg:text-5xl font-extrabold text-white">
-              Find Safe Accommodations
-            </h1>
-          </ScrollReveal>
-          <ScrollReveal delay={100} distance={20}>
-            <p className="mt-4 text-lg text-blue-200 max-w-2xl">
-              Search verified properties with transparent safety ratings and real student feedback.
-            </p>
-          </ScrollReveal>
+    <div className="dw dw-page listing">
+      {/* Search header */}
+      <section className="listing-hero page-shell">
+        <div className="listing-hero__copy">
+          <span className="section-index">EXPLORE</span>
+          <h1>Find a safe place<br />near campus.</h1>
+          <p>Every property shows a live Trust Score built from verified student reports. Search by name, area or city.</p>
+
+          <form className="listing-search" role="search" onSubmit={(e) => e.preventDefault()}>
+            <Icon name="search" size={20} />
+            <label className="sr-only" htmlFor="listing-q">Search accommodations</label>
+            <input
+              id="listing-q"
+              type="search"
+              placeholder="Search by name, area or city…"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              autoComplete="off"
+            />
+            {searchTerm && (
+              <button type="button" className="listing-search__clear" onClick={() => setSearchTerm('')} aria-label="Clear search">
+                <Icon name="x" size={16} />
+              </button>
+            )}
+          </form>
+
+          {popularAreas.length > 0 && (
+            <div className="area-chips" aria-label="Popular areas">
+              <span>Popular:</span>
+              {popularAreas.map((area) => (
+                <button
+                  key={area}
+                  className={searchTerm.toLowerCase() === area.toLowerCase() ? 'is-active' : ''}
+                  onClick={() => setSearchTerm(searchTerm.toLowerCase() === area.toLowerCase() ? '' : area)}
+                >
+                  {area}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <dl className="listing-summary" aria-label="Summary">
+          <div>
+            <dt>Properties</dt>
+            <dd>{loading ? '—' : summary.total}</dd>
+          </div>
+          <div>
+            <dt>Average Trust Score</dt>
+            <dd>{loading ? '—' : summary.avg}</dd>
+          </div>
+          <div>
+            <dt>Rated Excellent</dt>
+            <dd>{loading ? '—' : summary.excellent}</dd>
+          </div>
+          <div>
+            <dt>Cities</dt>
+            <dd>{loading ? '—' : summary.cities}</dd>
+          </div>
+        </dl>
+      </section>
+
+      {/* Toolbar */}
+      <div className="listing-toolbar-host">
+        <div className="listing-toolbar page-shell">
+          <div className="filter-group" role="radiogroup" aria-label="Filter by Trust Score">
+            {FILTERS.map((f) => (
+              <button
+                key={f.id}
+                role="radio"
+                aria-checked={selectedFilter === f.id}
+                className={selectedFilter === f.id ? 'is-active' : ''}
+                onClick={() => setSelectedFilter(f.id)}
+              >
+                {f.tone && <i className={`dot dot--${f.tone}`} />}
+                {f.label}
+                <span className="count">{loading ? '·' : counts[f.id]}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="toolbar-right">
+            <label className="sort">
+              <span className="sr-only">Sort by</span>
+              <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
+                {SORTS.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
+              </select>
+              <Icon name="chevron" size={15} />
+            </label>
+            <div className="view-toggle" role="group" aria-label="Layout">
+              <button className={viewMode === 'grid' ? 'is-active' : ''} onClick={() => setViewMode('grid')} aria-pressed={viewMode === 'grid'} aria-label="Grid view">
+                <Icon name="grid" size={17} />
+              </button>
+              <button className={viewMode === 'list' ? 'is-active' : ''} onClick={() => setViewMode('list')} aria-pressed={viewMode === 'list'} aria-label="List view">
+                <Icon name="list" size={17} />
+              </button>
+            </div>
+            <button
+              className={`map-toggle ${showMap ? 'is-active' : ''}`}
+              onClick={() => setShowMap(!showMap)}
+              aria-pressed={showMap}
+              aria-label={showMap ? 'Hide map' : 'Show map'}
+            >
+              <Icon name="map" size={16} /> <span>{showMap ? 'Hide map' : 'Show map'}</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10">
-        {/* Search and Filters Card */}
-        <ScrollReveal delay={0} distance={40}>
-          <div className="bg-white rounded-3xl shadow-xl p-6 lg:p-8 mb-8 border border-gray-100 relative z-10">
-            <div className="flex flex-col lg:flex-row gap-6">
-              {/* Search Input */}
-              <div className="flex-grow relative">
-                <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type="text"
-                  placeholder="Search by name, location, or city..."
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-700 placeholder-gray-400 font-medium"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
+      <div className="page-shell listing-body">
+        {showMap && (
+          <div className="listing-map">
+            <AccommodationMap />
+          </div>
+        )}
 
-              {/* Filter Pills & View Toggles */}
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="flex gap-2 flex-wrap bg-gray-50 p-1 rounded-2xl border border-gray-100">
-                  <StaggerReveal stagger={50}>
-                    {[
-                      { id: 'all', label: 'All' },
-                      { id: 'safe', label: '🟢 Safe (80+)' },
-                      { id: 'caution', label: '🟡 Caution (50-79)' },
-                      { id: 'avoid', label: '🔴 Avoid (<50)' }
-                    ].map(filter => (
-                      <button
-                        key={filter.id}
-                        onClick={() => setSelectedFilter(filter.id)}
-                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 ${
-                          selectedFilter === filter.id
-                            ? 'bg-white text-blue-600 shadow-sm'
-                            : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                      >
-                        {filter.label}
-                      </button>
-                    ))}
-                  </StaggerReveal>
-                </div>
-
-                <div className="h-8 w-[1px] bg-gray-200 hidden lg:block mx-2"></div>
-
-                <FadeIn delay={200}>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setViewMode('grid')}
-                      className={`p-3 rounded-xl transition-all ${viewMode === 'grid' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
-                      title="Grid View"
-                    >
-                      <FiGrid className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => setViewMode('list')}
-                      className={`p-3 rounded-xl transition-all ${viewMode === 'list' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
-                      title="List View"
-                    >
-                      <FiList className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => setShowMap(!showMap)}
-                      className={`p-3 rounded-xl transition-all ${showMap ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
-                      title="Map View"
-                    >
-                      <FiMap className="h-5 w-5" />
-                    </button>
-                  </div>
-                </FadeIn>
-              </div>
+        {error && (
+          <div className="listing-error" role="alert">
+            <span className="listing-error__icon"><Icon name="alert" size={20} /></span>
+            <div>
+              <strong>We couldn't load properties</strong>
+              <p>{error}. Check your connection and try again.</p>
             </div>
+            <button
+              className="button button--dark button--small"
+              onClick={() => {
+                setError('');
+                setLoading(true);
+                fetchAccommodations();
+              }}
+            >
+              <Icon name="refresh" size={15} /> Retry
+            </button>
+          </div>
+        )}
 
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-gray-50">
-              <FadeIn delay={100}>
-                <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">
-                  Showing <span className="text-blue-600">{filteredAccommodations.length}</span> verified accommodations
-                </p>
-              </FadeIn>
+        {!loading && !error && (
+          <p className="results-meta" aria-live="polite">
+            Showing <strong>{results.length}</strong> of {accommodations.length} properties
+            {searchTerm && <> for “<strong>{searchTerm}</strong>”</>}
+            {(searchTerm || selectedFilter !== 'all') && (
+              <button className="text-action" onClick={resetFilters}>Clear filters</button>
+            )}
+          </p>
+        )}
+
+        {loading ? (
+          <div className="prop-grid">
+            {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+          </div>
+        ) : results.length === 0 && !error ? (
+          <div className="listing-empty">
+            <span className="listing-empty__icon"><Icon name="search" size={26} /></span>
+            <h3>{accommodations.length === 0 ? 'No properties listed yet' : 'No matches for these filters'}</h3>
+            <p>
+              {accommodations.length === 0
+                ? 'Know a PG or hostel that should be here? Owners can register for free.'
+                : 'Try a different area, or widen the Trust Score filter.'}
+            </p>
+            <div className="listing-empty__actions">
+              {accommodations.length > 0 && (
+                <button className="button button--dark" onClick={resetFilters}>Clear filters</button>
+              )}
+              <Link className="text-action" to="/owner/register">
+                Register a property <Icon name="arrow" size={15} />
+              </Link>
             </div>
           </div>
-        </ScrollReveal>
-
-        {/* Map Section */}
-        {showMap && (
-          <ScrollReveal delay={0} direction="down" distance={30}>
-            <div className="mb-8 rounded-3xl shadow-xl border-4 border-white overflow-hidden h-[500px]">
-              <AccommodationMap />
-            </div>
-          </ScrollReveal>
-        )}
-
-        {/* Error Message */}
-        {error && (
-          <ScaleIn delay={0} scale={0.95}>
-            <div className="bg-red-50 border border-red-100 text-red-700 p-6 rounded-2xl mb-8 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <FiAlertTriangle className="h-6 w-6 text-red-500" />
-                <p className="font-bold">{error}</p>
-              </div>
-              <button 
-                onClick={() => { setError(""); setLoading(true); fetchAccommodations(); }}
-                className="bg-white text-red-600 px-6 py-2 rounded-xl font-bold border border-red-200 hover:bg-red-50 transition-all"
-              >
-                Retry Search
-              </button>
-            </div>
-          </ScaleIn>
-        )}
-
-        {/* Results */}
-        {filteredAccommodations.length === 0 ? (
-          <ScaleIn delay={0} scale={0.9}>
-            <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-100 max-w-2xl mx-auto">
-              <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <FiSearch className="text-gray-300 text-3xl" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-700 mb-2">No accommodations found in this area</h3>
-              <p className="text-gray-500 mb-8 max-w-md mx-auto px-4">
-                Know a property that should be here? Ask owners to register for free and join the safety movement.
-              </p>
-              <Link 
-                to="/owner/register" 
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-xl font-bold inline-flex items-center gap-2 hover:shadow-xl transition-all"
-              >
-                Register Property <FiArrowRight />
-              </Link>
-            </div>
-          </ScaleIn>
         ) : (
-          <StaggerReveal 
-            stagger={80} 
-            className={viewMode === 'grid' 
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" 
-              : "space-y-6"
-            }
-          >
-            {filteredAccommodations.map(accommodation => (
-              <Link 
-                key={accommodation._id} 
-                to={`/accommodations/${accommodation._id}`}
-                className={`group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden flex ${viewMode === 'list' ? 'flex-row items-center p-4' : 'flex-col'}`}
-              >
-                {/* Image / Thumbnail */}
-                <div className={`${viewMode === 'list' ? 'w-40 h-40 rounded-2xl' : 'w-full h-56'} bg-slate-50 relative overflow-hidden flex-shrink-0`}>
-                  {accommodation.images && accommodation.images.length > 0 ? (
-                    <img 
-                      src={accommodation.images[0]} 
-                      alt={accommodation.name}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-                      <FiHome className="h-12 w-12 text-slate-200 group-hover:scale-110 transition-transform duration-500" />
-                    </div>
-                  )}
-                  <div className="absolute top-4 left-4">
-                    {getScoreBadge(accommodation.trustScore ?? 0)}
-                  </div>
-                  <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/5 transition-colors duration-500"></div>
-                </div>
-
-                <div className={`${viewMode === 'list' ? 'px-8 flex-grow' : 'p-6 lg:p-8'}`}>
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
-                      {accommodation.name}
-                    </h3>
-                  </div>
-                  
-                  <div className="flex items-center text-gray-500 mb-6 text-sm font-medium">
-                    <FiMapPin className="h-4 w-4 mr-2 text-blue-500" />
-                    <span className="truncate">{accommodation.address}, {accommodation.city}</span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 mb-6 py-5 border-y border-gray-50">
-                    <div className="space-y-1">
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Reports</p>
-                      <p className="text-lg font-black text-gray-900 flex items-center gap-1.5">
-                        <FiAlertTriangle className="text-red-500 h-4 w-4" /> {accommodation.totalReports || 0}
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Resolved</p>
-                      <p className="text-lg font-black text-gray-900 flex items-center gap-1.5">
-                        <FiCheckCircle className="text-green-500 h-4 w-4" /> {accommodation.resolvedReports || 0}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-gray-400">
-                      {accommodation.type || 'Hostel/PG'}
-                    </span>
-                    <span className="text-blue-600 font-bold text-sm flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                      View Safety Profile <FiArrowRight className="text-xs" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </StaggerReveal>
+          <div className={viewMode === 'grid' ? 'prop-grid' : 'prop-list'}>
+            {results.map((acc) => <PropertyCard key={acc._id} acc={acc} view={viewMode} />)}
+          </div>
         )}
       </div>
     </div>
