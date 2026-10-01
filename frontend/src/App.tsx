@@ -9,15 +9,13 @@ import { ReportIncident } from './pages/ReportIncident';
 
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
-import { Header } from './components/Header';
-import { Footer } from './components/Footer';
+import { SiteHeader } from './components/landing/SiteHeader';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AccommodationProvider } from './contexts/AccommodationContext';
 import MyReports from './pages/MyReports';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminOwnerVerifications from './pages/AdminOwnerVerifications';
 import OwnerRegister from './pages/OwnerRegister';
-import OwnerLogin from './pages/OwnerLogin';
 import OwnerDashboard from './pages/OwnerDashboard';
 import AddProperty from './pages/AddProperty';
 import Profile from './pages/Profile';
@@ -77,13 +75,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; requiredRole?: strin
       return null;
     }
     
-    // No user, redirect to appropriate login
-    if (location.pathname.startsWith('/owner')) {
-      return <Navigate to="/owner/login" state={{ from: location }} replace />;
-    }
-    if (location.pathname.startsWith('/admin')) {
-      return <Navigate to="/login" state={{ from: location }} replace />;
-    }
+    // No user: one login page for every role; it sends them back here after.
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
   
@@ -142,7 +134,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <SiteHeader />
       <main className="flex-grow">
         <Routes>
           {/* ==================== PUBLIC ROUTES ==================== */}
@@ -154,7 +146,8 @@ function AppContent() {
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/owner/register" element={<OwnerRegister />} />
-          <Route path="/owner/login" element={<OwnerLogin />} />
+          {/* Owners now use the shared login; keep old links working */}
+          <Route path="/owner/login" element={<Navigate to="/login" replace />} />
           
           {/* ==================== STUDENT PROTECTED ROUTES ==================== */}
           <Route 
@@ -232,12 +225,9 @@ function AppContent() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      
-      {/* ✅ Footer only on Home Page */}
-      {isHomePage && <Footer />}
-      
-      {/* Backend Status Indicator */}
-      <div style={{ 
+
+      {/* Backend Status Indicator (hidden on the public landing page) */}
+      {!isHomePage && <div style={{
         position: "fixed", 
         bottom: 10, 
         right: 10, 
@@ -249,7 +239,7 @@ function AppContent() {
         zIndex: 9999
       }}>
         Backend: {backendStatus}
-      </div>
+      </div>}
     </div>
   );
 }

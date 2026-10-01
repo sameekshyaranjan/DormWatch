@@ -59,7 +59,7 @@ export default function OwnerDashboard() {
     if (authLoading) return;
 
     if (!user) {
-      navigate('/owner/login');
+      navigate('/login');
       return;
     }
 
@@ -86,7 +86,7 @@ export default function OwnerDashboard() {
     const token = localStorage.getItem('token');
     
     if (!token) {
-      navigate('/owner/login');
+      navigate('/login');
       return;
     }
     
